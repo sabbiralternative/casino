@@ -1,0 +1,6 @@
+.border-green-color:hover {
+  border-color: #36e6a1;
+  -webkit-box-shadow: 0 0 0.5em rgba(56, 229, 144, 0.61);
+  box-shadow: 0 0 0.5em rgba(56, 229, 144, 0.61);
+  background: rgba(255, 255, 255, 0.12);
+}
