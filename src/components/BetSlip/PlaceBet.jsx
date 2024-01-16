@@ -9,6 +9,7 @@ const PlaceBet = ({
   totalSize,
   setIsOpenBetEdit,
   placeBetValue,
+  setClickedRunners,
 }) => {
   const handleOrderBets = () => {
     const generatedToken = UseTokenGenerator();
@@ -40,8 +41,10 @@ const PlaceBet = ({
       .then((data) => {
         if (data?.success) {
           toast.success("Bet has been placed !");
+          setClickedRunners([])
         } else {
           toast.error(data?.error?.status[0]?.description);
+          setClickedRunners([])
         }
       });
   };
@@ -175,15 +178,17 @@ const PlaceBet = ({
         </button>
       </div>
 
-      <div
+      <button
         onClick={handleOrderBets}
         className="KhBsqBeTVLjPdBWq4U3M"
         data-testid="b-btn"
+        disabled={totalSize === '' ? true:false}
+        style={{cursor:`${totalSize === '' ? 'not-allowed':''}`}}
       >
         <div className="sc-dycYrt eTFmIv">
           <span className="i8NQLBA6iKZyRHyZGxwd">Bet</span>
         </div>
-      </div>
+      </button>
     </div>
   );
 };

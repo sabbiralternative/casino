@@ -15,13 +15,13 @@ const App = () => {
   const [data, setData] = useState([]);
   const [placeBetValue, setPlaceBetValue] = useState({});
   const [price, setPrice] = useState("");
-  const [totalSize, setTotalSize] = useState("10");
+  const [totalSize, setTotalSize] = useState("");
   const [isOpenBetEdit, setIsOpenBetEdit] = useState(false);
+  const [clickedRunners, setClickedRunners] = useState([]);
 
   useEffect(() => {
     const deviceWidth = (window.innerWidth * 0.04266674418).toFixed(4);
     setFontSize(deviceWidth);
-    console.log(deviceWidth);
   }, []);
 
   useEffect(() => {
@@ -62,13 +62,12 @@ const App = () => {
         }
       );
       const data = res.data;
-      console.log(data);
       if (data.success) {
         setData(data.result);
       }
     };
     getGameDetails();
-    const intervalId = setInterval(getGameDetails, 6000);
+    const intervalId = setInterval(getGameDetails, 600);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -89,6 +88,18 @@ const App = () => {
       maxLiabilityPerMarket: game?.maxLiabilityPerMarket,
       isBettable: game?.isBettable,
       maxLiabilityPerBet: game?.maxLiabilityPerBet,
+      borderActive: true,
+    });
+    setClickedRunners([]);
+    setClickedRunners((prevClickedRunners) => {
+      const updatedRunners = [...prevClickedRunners];
+      const index = updatedRunners.indexOf(runner.id);
+      if (index === -1) {
+        updatedRunners.push(runner.id);
+      } else {
+        updatedRunners.splice(index, 1);
+      }
+      return updatedRunners;
     });
   };
   console.log(placeBetValue);
@@ -205,11 +216,16 @@ const App = () => {
                       style={{ height: "3.4em" }}
                     >
                       {data[0]?.runners?.map((runner) => {
+                        const isRunnerClicked = clickedRunners.includes(
+                          runner.id
+                        );
                         return (
                           <div
                             onClick={() => handlePlaceBet(data[0], runner)}
                             key={runner?.id}
-                            className="QIGYZANQUJzivDLQDHjm border-green-color"
+                            className={`QIGYZANQUJzivDLQDHjm ${
+                              isRunnerClicked ? "border-green-color" : ""
+                            }`}
                             style={{ width: "6.8em" }}
                             data-combination="3"
                             data-testid=""
@@ -235,12 +251,16 @@ const App = () => {
                     >
                       {data?.slice(1, 4)?.map((games) =>
                         games?.runners?.map((runner) => {
-                          // console.log(i);
+                          const isRunnerClicked = clickedRunners.includes(
+                            runner.id
+                          );
                           return (
                             <div
-                              onClick={() => handlePlaceBet(games, runner)}
+                              onClick={() => {
+                                handlePlaceBet(games, runner);
+                              }}
                               key={runner?.id}
-                              className={`border-green-color QIGYZANQUJzivDLQDHjm ${
+                              className={`${isRunnerClicked ? 'border-green-color':''} QIGYZANQUJzivDLQDHjm ${
                                 runner?.name === "Red"
                                   ? "Jd_FQ2o2GATSrBeLJ2Rw"
                                   : ""
@@ -275,13 +295,16 @@ const App = () => {
                       </div>
                       <div className="HIZjOTeNz60Nkxq2F8yF">
                         {data[4]?.runners?.map((runner) => {
+                              const isRunnerClicked = clickedRunners.includes(
+                                runner.id
+                              );
                           return (
                             <div
                               onClick={() => handlePlaceBet(data[4], runner)}
                               key={runner?.id}
-                              className="eiFJV7HiEPLhZOWBIVL_ "
+                              className={`eiFJV7HiEPLhZOWBIVL_ ${isRunnerClicked ? 'border-green-color':''}`}
                               data-combination="09"
-                              style={{ height: "7.2%" }}
+                              style={{ width: "7.2%" }}
                             >
                               <span className="phht8116FLncA8Oh2SMh">
                                 {runner?.name}
@@ -300,6 +323,7 @@ const App = () => {
                     setTotalSize={setTotalSize}
                     setIsOpenBetEdit={setIsOpenBetEdit}
                     price={price}
+                    setClickedRunners={setClickedRunners}
                   />
                 </div>
               </div>

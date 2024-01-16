@@ -641,7 +641,7 @@
   justify-content: center;
   width: 9.0909090909%;
   height: 2.25em;
-  margin: 0.125em;
+  /* margin: 0.125em; */
   padding: 0.5em;
   border-radius: 0.375em;
   background: rgba(255, 255, 255, 0.08);
@@ -697,6 +697,7 @@
   display: -webkit-flex;
   display: -moz-box;
   height: 100%;
+  gap: 1.7px;
 }
 .TbDJtMH0Lesra_HZpmsu {
   display: flex;
