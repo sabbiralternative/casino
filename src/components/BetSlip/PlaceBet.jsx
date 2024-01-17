@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import UseEncryptData from "../../hooks/UseEncryptData";
 import UseTokenGenerator from "../../hooks/UseTokenGenerator";
 import { token } from "../../hooks/token";
@@ -10,7 +11,10 @@ const PlaceBet = ({
   setIsOpenBetEdit,
   placeBetValue,
   setClickedRunners,
+  setPlaceBetValue
 }) => {
+  console.log({ totalSize }, { price });
+  const [disabledButton, setDisabledButton] = useState(true);
   const handleOrderBets = () => {
     const generatedToken = UseTokenGenerator();
     const encryptedData = UseEncryptData([
@@ -40,14 +44,26 @@ const PlaceBet = ({
       .then((res) => res.json())
       .then((data) => {
         if (data?.success) {
+          setPlaceBetValue({})
+          setDisabledButton(false)
           toast.success("Bet has been placed !");
-          setClickedRunners([])
+          setClickedRunners([]);
         } else {
+          // setPlaceBetValue({})
+          // setDisabledButton(false)
           toast.error(data?.error?.status[0]?.description);
-          setClickedRunners([])
+          setClickedRunners([]);
         }
       });
   };
+
+  useEffect(() => {
+    if(price){
+      setDisabledButton(false)
+    }else{
+      setDisabledButton(true)
+    }
+  }, [price]);
   return (
     <div className="Rn1q6VYPn_O3TZmJDoCW mt">
       <div className="Gj7cxQiFrgtmDF3EqwTu">
@@ -180,10 +196,8 @@ const PlaceBet = ({
 
       <button
         onClick={handleOrderBets}
-        className="KhBsqBeTVLjPdBWq4U3M"
+        className={`KhBsqBeTVLjPdBWq4U3M ${disabledButton ? "disabled" : ""}`}
         data-testid="b-btn"
-        disabled={totalSize === '' ? true:false}
-        style={{cursor:`${totalSize === '' ? 'not-allowed':''}`}}
       >
         <div className="sc-dycYrt eTFmIv">
           <span className="i8NQLBA6iKZyRHyZGxwd">Bet</span>

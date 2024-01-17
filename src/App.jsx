@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar/Sidebar";
 import axios from "axios";
@@ -118,9 +118,16 @@ const App = () => {
     const currentTimestamp = Math.floor(new Date().getTime() / 1000);
     const timer = counter - (currentTimestamp - roundStart);
     setTimer(timer);
-  }, [roundId]);
+    if(timer > 0){
+      const interval = setInterval(() => {
+        setTimer((prevCount) => prevCount - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [roundId,timer]);
   /* Timer end */
 
+ 
   return (
     <div
       className="App AppMobile AppGame"
@@ -357,6 +364,7 @@ const App = () => {
                     setIsOpenBetEdit={setIsOpenBetEdit}
                     price={price}
                     setClickedRunners={setClickedRunners}
+                    setPlaceBetValue={setPlaceBetValue}
                   />
                 </div>
                 <h3
@@ -364,7 +372,7 @@ const App = () => {
                     padding: "4px",
                   }}
                 >
-                  {timer}
+                  {timer > 0 ? timer : 0}
                 </h3>
               </div>
             </div>
