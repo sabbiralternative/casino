@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar/Sidebar";
 import axios from "axios";
@@ -107,6 +108,19 @@ const App = () => {
   useEffect(() => {
     setPrice(placeBetValue?.price);
   }, [placeBetValue]);
+
+  /* Timer start */
+  const [timer, setTimer] = useState("");
+  const roundId = data[0]?.roundId;
+  useEffect(() => {
+    const roundStart = data[0]?.roundStart;
+    const counter = data[0]?.counter;
+    const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+    const timer = counter - (currentTimestamp - roundStart);
+    setTimer(timer);
+  }, [roundId]);
+  /* Timer end */
+
   return (
     <div
       className="App AppMobile AppGame"
@@ -225,7 +239,12 @@ const App = () => {
                             key={runner?.id}
                             className={`QIGYZANQUJzivDLQDHjm ${
                               isRunnerClicked ? "border-green-color" : ""
-                            }`}
+                            } ${
+                              data[0]?.status === "OPEN" &&
+                              runner?.status === "ACTIVE"
+                                ? ""
+                                : "disabled"
+                            } `}
                             style={{ width: "6.8em" }}
                             data-combination="3"
                             data-testid=""
@@ -260,11 +279,18 @@ const App = () => {
                                 handlePlaceBet(games, runner);
                               }}
                               key={runner?.id}
-                              className={`${isRunnerClicked ? 'border-green-color':''} QIGYZANQUJzivDLQDHjm ${
+                              className={`${
+                                isRunnerClicked ? "border-green-color" : ""
+                              } QIGYZANQUJzivDLQDHjm ${
                                 runner?.name === "Red"
                                   ? "Jd_FQ2o2GATSrBeLJ2Rw"
                                   : ""
-                              }`}
+                              } ${
+                                games?.status === "OPEN" &&
+                                runner?.status === "ACTIVE"
+                                  ? ""
+                                  : "disabled"
+                              } `}
                               style={{
                                 width: "6.8em",
                                 height: "2.1875em",
@@ -295,14 +321,21 @@ const App = () => {
                       </div>
                       <div className="HIZjOTeNz60Nkxq2F8yF">
                         {data[4]?.runners?.map((runner) => {
-                              const isRunnerClicked = clickedRunners.includes(
-                                runner.id
-                              );
+                          const isRunnerClicked = clickedRunners.includes(
+                            runner.id
+                          );
                           return (
                             <div
                               onClick={() => handlePlaceBet(data[4], runner)}
                               key={runner?.id}
-                              className={`eiFJV7HiEPLhZOWBIVL_ ${isRunnerClicked ? 'border-green-color':''}`}
+                              className={`eiFJV7HiEPLhZOWBIVL_ ${
+                                isRunnerClicked ? "border-green-color" : ""
+                              } ${
+                                data[4]?.status === "OPEN" &&
+                                runner?.status === "ACTIVE"
+                                  ? ""
+                                  : "disabled"
+                              }`}
                               data-combination="09"
                               style={{ width: "7.2%" }}
                             >
@@ -326,6 +359,13 @@ const App = () => {
                     setClickedRunners={setClickedRunners}
                   />
                 </div>
+                <h3
+                  style={{
+                    padding: "4px",
+                  }}
+                >
+                  {timer}
+                </h3>
               </div>
             </div>
           </div>
