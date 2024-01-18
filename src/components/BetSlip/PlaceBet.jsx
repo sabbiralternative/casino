@@ -11,11 +11,15 @@ const PlaceBet = ({
   setIsOpenBetEdit,
   placeBetValue,
   setClickedRunners,
-  setPlaceBetValue
+  setPlaceBetValue,
+  timer,
+  data
 }) => {
-  console.log({ totalSize }, { price });
+
+  // console.log({ totalSize }, { price });
   const [disabledButton, setDisabledButton] = useState(true);
   const handleOrderBets = () => {
+   
     const generatedToken = UseTokenGenerator();
     const encryptedData = UseEncryptData([
       {
@@ -26,14 +30,27 @@ const PlaceBet = ({
         price: price ? price : placeBetValue?.price,
         selectionId: placeBetValue?.selectionId,
         side: placeBetValue?.side,
-        totalSize: totalSize,
+        totalSize: "totalSize",
         token: generatedToken,
         maxLiabilityPerMarket: placeBetValue?.maxLiabilityPerMarket,
         isBettable: placeBetValue?.isBettable,
         maxLiabilityPerBet: placeBetValue?.maxLiabilityPerBet,
       },
     ]);
-
+    console.log(    {
+      betDelay: placeBetValue?.betDelay,
+      btype: placeBetValue?.btype,
+      eventTypeId: placeBetValue?.eventTypeId,
+      marketId: placeBetValue?.marketId,
+      price: price ? price : placeBetValue?.price,
+      selectionId: placeBetValue?.selectionId,
+      side: placeBetValue?.side,
+      totalSize: totalSize,
+      token: generatedToken,
+      maxLiabilityPerMarket: placeBetValue?.maxLiabilityPerMarket,
+      isBettable: placeBetValue?.isBettable,
+      maxLiabilityPerBet: placeBetValue?.maxLiabilityPerBet,
+    },);
     fetch("https://api7.live/api/exchange/diamond/order", {
       method: "POST",
       headers: {
@@ -43,6 +60,7 @@ const PlaceBet = ({
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         if (data?.success) {
           setPlaceBetValue({})
           setDisabledButton(false)
@@ -64,6 +82,13 @@ const PlaceBet = ({
       setDisabledButton(true)
     }
   }, [price]);
+
+  useEffect(()=>{
+    if(price){
+      const double = (totalSize * price).toFixed(2);
+      setTotalSize(double)
+    }
+  },[price])
   return (
     <div className="Rn1q6VYPn_O3TZmJDoCW mt">
       <div className="Gj7cxQiFrgtmDF3EqwTu">
@@ -107,7 +132,7 @@ const PlaceBet = ({
               style={{ cursor: "pointer" }}
               className="PYZc1_ZvbywJnihyX1Jd"
             >
-              {totalSize}
+              {totalSize }
             </div>
             <button
               onClick={() => setTotalSize((prev) => parseFloat(prev) + 10)}
@@ -146,7 +171,7 @@ const PlaceBet = ({
             </button>
           </div>
           <div className="GISE4h9RdcmUQwKksvZQ un4K2gtXjSRNha6klDqw">
-            <span className="vwc9L43LXPxl8ND_D5l9">x{price}</span>
+            <span className="vwc9L43LXPxl8ND_D5l9">x2</span>
           </div>
         </div>
       </div>
@@ -196,7 +221,7 @@ const PlaceBet = ({
 
       <button
         onClick={handleOrderBets}
-        className={`KhBsqBeTVLjPdBWq4U3M ${disabledButton ? "disabled" : ""}`}
+        className={`KhBsqBeTVLjPdBWq4U3M ${disabledButton || timer < 1 || data[0]?.status === "SUSPENDED" ? "disabled" : ""}`}
         data-testid="b-btn"
       >
         <div className="sc-dycYrt eTFmIv">

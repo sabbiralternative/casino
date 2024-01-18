@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar/Sidebar";
 import axios from "axios";
@@ -72,14 +71,14 @@ const App = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  console.log(data);
+  // console.log(data);
 
   const handlePlaceBet = (game, runner) => {
     setPlaceBetValue({});
     setPlaceBetValue({
       price: runner?.back[0]?.price,
       side: 0,
-      selectionId: runner?.back[0]?.id,
+      selectionId: runner?.id,
       btype: game?.btype,
       eventTypeId: game?.eventTypeId,
       betDelay: game?.betDelay,
@@ -91,6 +90,7 @@ const App = () => {
       maxLiabilityPerBet: game?.maxLiabilityPerBet,
       borderActive: true,
     });
+
     setClickedRunners([]);
     setClickedRunners((prevClickedRunners) => {
       const updatedRunners = [...prevClickedRunners];
@@ -103,7 +103,7 @@ const App = () => {
       return updatedRunners;
     });
   };
-  console.log(placeBetValue);
+  // console.log(placeBetValue);
 
   useEffect(() => {
     setPrice(placeBetValue?.price);
@@ -118,16 +118,23 @@ const App = () => {
     const currentTimestamp = Math.floor(new Date().getTime() / 1000);
     const timer = counter - (currentTimestamp - roundStart);
     setTimer(timer);
-    if(timer > 0){
+    if (timer > 0) {
       const interval = setInterval(() => {
         setTimer((prevCount) => prevCount - 1);
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [roundId,timer]);
+  }, [roundId, timer]);
   /* Timer end */
 
- 
+  const isBorderActiveStatus = data[0]?.status;
+  useEffect(() => {
+    if (isBorderActiveStatus === "SUSPENDED") {
+      setClickedRunners([]);
+      console.log(12345);
+    }
+  }, [isBorderActiveStatus]);
+
   return (
     <div
       className="App AppMobile AppGame"
@@ -245,10 +252,15 @@ const App = () => {
                             onClick={() => handlePlaceBet(data[0], runner)}
                             key={runner?.id}
                             className={`QIGYZANQUJzivDLQDHjm ${
-                              isRunnerClicked ? "border-green-color" : ""
-                            } ${
+                              isRunnerClicked &&
                               data[0]?.status === "OPEN" &&
                               runner?.status === "ACTIVE"
+                                ? "border-green-color"
+                                : ""
+                            } ${
+                              (data[0]?.status === "OPEN" &&
+                                runner?.status === "ACTIVE") ||
+                              timer > 0
                                 ? ""
                                 : "disabled"
                             } `}
@@ -287,14 +299,19 @@ const App = () => {
                               }}
                               key={runner?.id}
                               className={`${
-                                isRunnerClicked ? "border-green-color" : ""
+                                isRunnerClicked &&
+                                games?.status === "OPEN" &&
+                                runner?.status === "ACTIVE"
+                                  ? "border-green-color"
+                                  : ""
                               } QIGYZANQUJzivDLQDHjm ${
                                 runner?.name === "Red"
                                   ? "Jd_FQ2o2GATSrBeLJ2Rw"
                                   : ""
                               } ${
-                                games?.status === "OPEN" &&
-                                runner?.status === "ACTIVE"
+                                (games?.status === "OPEN" &&
+                                  runner?.status === "ACTIVE") ||
+                                timer > 0
                                   ? ""
                                   : "disabled"
                               } `}
@@ -336,10 +353,15 @@ const App = () => {
                               onClick={() => handlePlaceBet(data[4], runner)}
                               key={runner?.id}
                               className={`eiFJV7HiEPLhZOWBIVL_ ${
-                                isRunnerClicked ? "border-green-color" : ""
-                              } ${
+                                isRunnerClicked &&
                                 data[4]?.status === "OPEN" &&
                                 runner?.status === "ACTIVE"
+                                  ? "border-green-color"
+                                  : ""
+                              } ${
+                                (data[4]?.status === "OPEN" &&
+                                  runner?.status === "ACTIVE") ||
+                                timer > 0
                                   ? ""
                                   : "disabled"
                               }`}
@@ -365,6 +387,8 @@ const App = () => {
                     price={price}
                     setClickedRunners={setClickedRunners}
                     setPlaceBetValue={setPlaceBetValue}
+                    timer={timer}
+                    data={data}
                   />
                 </div>
                 <h3
