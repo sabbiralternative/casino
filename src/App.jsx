@@ -253,13 +253,11 @@ const App = () => {
                             key={runner?.id}
                             className={`QIGYZANQUJzivDLQDHjm ${
                               isRunnerClicked &&
-                              data[0]?.status === "OPEN" &&
-                              runner?.status === "ACTIVE"
+                              data[0]?.status === "OPEN" 
                                 ? "border-green-color"
                                 : ""
                             } ${
-                              (data[0]?.status === "OPEN" &&
-                                runner?.status === "ACTIVE") ||
+                              data[0]?.status === "OPEN"  &&
                               timer > 0
                                 ? ""
                                 : "disabled"
@@ -300,8 +298,7 @@ const App = () => {
                               key={runner?.id}
                               className={`${
                                 isRunnerClicked &&
-                                games?.status === "OPEN" &&
-                                runner?.status === "ACTIVE"
+                                data[0]?.status === "OPEN" 
                                   ? "border-green-color"
                                   : ""
                               } QIGYZANQUJzivDLQDHjm ${
@@ -309,8 +306,7 @@ const App = () => {
                                   ? "Jd_FQ2o2GATSrBeLJ2Rw"
                                   : ""
                               } ${
-                                (games?.status === "OPEN" &&
-                                  runner?.status === "ACTIVE") ||
+                                data[0]?.status === "OPEN"  &&
                                 timer > 0
                                   ? ""
                                   : "disabled"
@@ -338,7 +334,13 @@ const App = () => {
                     <div className="B8EAcQGrnzn_Hl8mH6Hk">
                       <div className="TbDJtMH0Lesra_HZpmsu">
                         <span className="PzV26OxN2WKtuj8Y9FHR"></span>
-                        <span className="dZ2gRLY67cqVBgNjZAFl">
+                        <span className={`dZ2gRLY67cqVBgNjZAFl  ${
+                                data[0]?.status === "OPEN" 
+                                   &&
+                                timer > 0
+                                  ? ""
+                                  : "disabled"
+                              }`}>
                           x{data[4]?.runners[0]?.back[0]?.price}
                         </span>
                         <span className="g4jdfxv4yJMhUCeEyYRD"></span>
@@ -354,13 +356,12 @@ const App = () => {
                               key={runner?.id}
                               className={`eiFJV7HiEPLhZOWBIVL_ ${
                                 isRunnerClicked &&
-                                data[4]?.status === "OPEN" &&
-                                runner?.status === "ACTIVE"
+                                data[0]?.status === "OPEN" 
                                   ? "border-green-color"
                                   : ""
                               } ${
-                                (data[4]?.status === "OPEN" &&
-                                  runner?.status === "ACTIVE") ||
+                                data[0]?.status === "OPEN" &&
+                                  
                                 timer > 0
                                   ? ""
                                   : "disabled"
