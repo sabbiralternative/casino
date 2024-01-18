@@ -658,12 +658,12 @@
   transition: transform 0.1s linear, border 0.3s, -webkit-transform 0.1s linear,
     -moz-transform 0.1s linear;
 }
-.eiFJV7HiEPLhZOWBIVL_:hover {
+/* .eiFJV7HiEPLhZOWBIVL_:hover {
   border-color: #36e6a1;
   -webkit-box-shadow: 0 0 0.5em rgba(56, 229, 144, 0.61);
   box-shadow: 0 0 0.5em rgba(56, 229, 144, 0.61);
   background: rgba(255, 255, 255, 0.12);
-}
+} */
 .eiFJV7HiEPLhZOWBIVL_:active {
   -webkit-transform: scale(0.96);
   -moz-transform: scale(0.96);

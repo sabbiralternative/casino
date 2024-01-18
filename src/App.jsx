@@ -129,11 +129,11 @@ const App = () => {
 
   const isBorderActiveStatus = data[0]?.status;
   useEffect(() => {
-    if (isBorderActiveStatus === "SUSPENDED") {
+    if (isBorderActiveStatus === "SUSPENDED" || timer < 1) {
       setClickedRunners([]);
-      console.log(12345);
     }
-  }, [isBorderActiveStatus]);
+  }, [isBorderActiveStatus,timer]);
+
 
   return (
     <div

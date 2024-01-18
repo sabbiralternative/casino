@@ -30,27 +30,14 @@ const PlaceBet = ({
         price: price ? price : placeBetValue?.price,
         selectionId: placeBetValue?.selectionId,
         side: placeBetValue?.side,
-        totalSize: "totalSize",
+        totalSize: totalSize,
         token: generatedToken,
         maxLiabilityPerMarket: placeBetValue?.maxLiabilityPerMarket,
         isBettable: placeBetValue?.isBettable,
         maxLiabilityPerBet: placeBetValue?.maxLiabilityPerBet,
       },
     ]);
-    console.log(    {
-      betDelay: placeBetValue?.betDelay,
-      btype: placeBetValue?.btype,
-      eventTypeId: placeBetValue?.eventTypeId,
-      marketId: placeBetValue?.marketId,
-      price: price ? price : placeBetValue?.price,
-      selectionId: placeBetValue?.selectionId,
-      side: placeBetValue?.side,
-      totalSize: totalSize,
-      token: generatedToken,
-      maxLiabilityPerMarket: placeBetValue?.maxLiabilityPerMarket,
-      isBettable: placeBetValue?.isBettable,
-      maxLiabilityPerBet: placeBetValue?.maxLiabilityPerBet,
-    },);
+   
     fetch("https://api7.live/api/exchange/diamond/order", {
       method: "POST",
       headers: {
@@ -83,12 +70,7 @@ const PlaceBet = ({
     }
   }, [price]);
 
-  useEffect(()=>{
-    if(price){
-      const double = (totalSize * price).toFixed(2);
-      setTotalSize(double)
-    }
-  },[price])
+
   return (
     <div className="Rn1q6VYPn_O3TZmJDoCW mt">
       <div className="Gj7cxQiFrgtmDF3EqwTu">
@@ -170,7 +152,9 @@ const PlaceBet = ({
               </svg>
             </button>
           </div>
-          <div className="GISE4h9RdcmUQwKksvZQ un4K2gtXjSRNha6klDqw">
+          <div
+          onClick={()=> setTotalSize((prev) => prev * 2)}
+          className="GISE4h9RdcmUQwKksvZQ un4K2gtXjSRNha6klDqw">
             <span className="vwc9L43LXPxl8ND_D5l9">x2</span>
           </div>
         </div>
