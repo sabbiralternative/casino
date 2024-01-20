@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import UseEncryptData from "../../hooks/UseEncryptData";
 import UseTokenGenerator from "../../hooks/UseTokenGenerator";
-import { token } from "../../hooks/token";
 import toast from "react-hot-toast";
+import useContextState from "../../hooks/useContextState";
 
 const PlaceBet = ({
   setTotalSize,
@@ -13,13 +13,13 @@ const PlaceBet = ({
   setClickedRunners,
   setPlaceBetValue,
   timer,
-  data
+  data,
 }) => {
-
-  // console.log({ totalSize }, { price });
+  const { token } = useContextState();
   const [disabledButton, setDisabledButton] = useState(true);
+  // console.log(data);
+  // console.log(placeBetValue);
   const handleOrderBets = () => {
-   
     const generatedToken = UseTokenGenerator();
     const encryptedData = UseEncryptData([
       {
@@ -37,7 +37,7 @@ const PlaceBet = ({
         maxLiabilityPerBet: placeBetValue?.maxLiabilityPerBet,
       },
     ]);
-   
+
     fetch("https://api7.live/api/exchange/diamond/order", {
       method: "POST",
       headers: {
@@ -49,11 +49,26 @@ const PlaceBet = ({
       .then((data) => {
         console.log(data);
         if (data?.success) {
-          setPlaceBetValue({})
-          setDisabledButton(false)
+          const totalBetPlace = localStorage.getItem("totalBetPlace");
+          let existingData = [];
+          if (totalBetPlace) {
+            existingData = JSON.parse(totalBetPlace);
+          }
+          const newBetPlace = {
+            id: placeBetValue?.selectionId,
+            price: price ? price : placeBetValue?.price,
+            totalSize
+            
+          };
+          existingData.push(newBetPlace);
+          const updatedDataString = JSON.stringify(existingData);
+          localStorage.setItem("totalBetPlace", updatedDataString);
+          setPlaceBetValue({});
+          setDisabledButton(false);
           toast.success("Bet has been placed !");
           setClickedRunners([]);
         } else {
+        
           // setPlaceBetValue({})
           // setDisabledButton(false)
           toast.error(data?.error?.status[0]?.description);
@@ -63,13 +78,12 @@ const PlaceBet = ({
   };
 
   useEffect(() => {
-    if(price){
-      setDisabledButton(false)
-    }else{
-      setDisabledButton(true)
+    if (price) {
+      setDisabledButton(false);
+    } else {
+      setDisabledButton(true);
     }
   }, [price]);
-
 
   return (
     <div className="Rn1q6VYPn_O3TZmJDoCW mt">
@@ -114,7 +128,7 @@ const PlaceBet = ({
               style={{ cursor: "pointer" }}
               className="PYZc1_ZvbywJnihyX1Jd"
             >
-              {totalSize }
+              {totalSize}
             </div>
             <button
               onClick={() => setTotalSize((prev) => parseFloat(prev) + 10)}
@@ -153,8 +167,9 @@ const PlaceBet = ({
             </button>
           </div>
           <div
-          onClick={()=> setTotalSize((prev) => prev * 2)}
-          className="GISE4h9RdcmUQwKksvZQ un4K2gtXjSRNha6klDqw">
+            onClick={() => setTotalSize((prev) => prev * 2)}
+            className="GISE4h9RdcmUQwKksvZQ un4K2gtXjSRNha6klDqw"
+          >
             <span className="vwc9L43LXPxl8ND_D5l9">x2</span>
           </div>
         </div>
@@ -205,7 +220,11 @@ const PlaceBet = ({
 
       <button
         onClick={handleOrderBets}
-        className={`KhBsqBeTVLjPdBWq4U3M ${disabledButton || timer < 1 || data[0]?.status === "SUSPENDED" ? "disabled" : ""}`}
+        className={`KhBsqBeTVLjPdBWq4U3M ${
+          disabledButton || timer < 1 || data[0]?.status === "SUSPENDED"
+            ? "disabled"
+            : ""
+        }`}
         data-testid="b-btn"
       >
         <div className="sc-dycYrt eTFmIv">

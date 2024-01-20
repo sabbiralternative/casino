@@ -3,10 +3,11 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import axios from "axios";
 import UseTokenGenerator from "./hooks/UseTokenGenerator";
 import UseEncryptData from "./hooks/UseEncryptData";
-import { token } from "./hooks/token";
 import BetSlip from "./components/BetSlip/BetSlip";
 import PlaceBet from "./components/BetSlip/PlaceBet";
 import { Toaster } from "react-hot-toast";
+import UseBalance from "./hooks/UseBalance";
+import useContextState from "./hooks/useContextState";
 
 const App = () => {
   const [fontSize, setFontSize] = useState("");
@@ -18,6 +19,30 @@ const App = () => {
   const [totalSize, setTotalSize] = useState("");
   const [isOpenBetEdit, setIsOpenBetEdit] = useState(false);
   const [clickedRunners, setClickedRunners] = useState([]);
+  const { token } = useContextState();
+  const [balance] = UseBalance();
+  const storedTotalWin = localStorage.getItem('totalWin');
+  const totalPlaceOrder = JSON.parse(localStorage.getItem("totalBetPlace"));
+
+  useEffect(() => {
+    if (data?.length > 0) {
+      const roundId = localStorage.getItem("roundId");
+      // console.log(roundId === data[0]?.roundId);
+      if (roundId != data[0]?.roundId) {
+        localStorage.removeItem("totalBetPlace");
+      }
+      localStorage.setItem("roundId", data[0]?.roundId);
+    }
+  }, [data]);
+
+  let totalOrderPlaced = 0;
+  if (totalPlaceOrder) {
+    for (const order of totalPlaceOrder) {
+      totalOrderPlaced = parseFloat(
+        (totalOrderPlaced + order?.price).toFixed(2)
+      );
+    }
+  }
 
   useEffect(() => {
     const deviceWidth = (window.innerWidth * 0.04266674418).toFixed(4);
@@ -71,7 +96,6 @@ const App = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // console.log(data);
 
   const handlePlaceBet = (game, runner) => {
     setPlaceBetValue({});
@@ -81,6 +105,7 @@ const App = () => {
       selectionId: runner?.id,
       btype: game?.btype,
       eventTypeId: game?.eventTypeId,
+      eventId: game?.eventId,
       betDelay: game?.betDelay,
       marketId: game?.id,
       back: true,
@@ -103,7 +128,7 @@ const App = () => {
       return updatedRunners;
     });
   };
-  // console.log(placeBetValue);
+ 
 
   useEffect(() => {
     setPrice(placeBetValue?.price);
@@ -111,7 +136,7 @@ const App = () => {
 
   /* Timer start */
   const [timer, setTimer] = useState("");
-  const roundId = data[0]?.roundId;
+  const roundIdForTimer = data[0]?.roundId;
   useEffect(() => {
     const roundStart = data[0]?.roundStart;
     const counter = data[0]?.counter;
@@ -124,7 +149,7 @@ const App = () => {
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [roundId, timer]);
+  }, [roundIdForTimer, timer]);
   /* Timer end */
 
   const isBorderActiveStatus = data[0]?.status;
@@ -132,7 +157,84 @@ const App = () => {
     if (isBorderActiveStatus === "SUSPENDED" || timer < 1) {
       setClickedRunners([]);
     }
-  }, [isBorderActiveStatus,timer]);
+  }, [isBorderActiveStatus, timer]);
+
+  const [WinnerRunner, setWinnerRunner] = useState({});
+
+  /* Blink color */
+  useEffect(() => {
+    const newChangedPrices = {};
+    data?.forEach((item) => {
+      item?.runners?.forEach((runner, runnerIndex) => {
+     
+        if (runner?.status === "WINNER") {
+          newChangedPrices[`${runner?.id}-${runnerIndex}`] = true;
+          setWinnerRunner({ ...newChangedPrices });
+          setTimeout(() => {
+            newChangedPrices[`${runner?.id}-${runnerIndex}`] = false;
+            setWinnerRunner({ ...newChangedPrices });
+          }, 300);
+        }
+      });
+    });
+  }, [data, timer]);
+
+
+
+  useEffect(() => {
+    let totalWin = 0;
+  
+    // Check if totalPlaceOrder is available
+    if (totalPlaceOrder && totalPlaceOrder.length > 0) {
+      console.log({totalPlaceOrder});
+      data?.forEach(games => {
+        games?.runners?.forEach(runner => {
+          if (runner?.status === 'WINNER') {
+            const winnerFilter = totalPlaceOrder?.filter(
+              (order) => order?.id === runner?.id && runner?.status === "WINNER"
+            );
+  
+            const looserFilter = totalPlaceOrder?.filter(
+              (order) => order?.id === runner?.id && runner?.status === "ACTIVE"
+            );
+  
+            let WinnerSum = 0;
+            let looserSum = 0;
+  // console.log({looserFilter});
+  // console.log({winnerFilter});
+            if (looserFilter) {
+              for (const looser of looserFilter) {
+                looserSum = looserSum + -looser?.price;
+              }
+            }
+  
+            if (winnerFilter) {
+              for (const winner of winnerFilter) {
+                WinnerSum += winner?.price * winner?.totalSize - winner?.totalSize;
+              }
+            }
+  
+            totalWin += looserSum + WinnerSum;
+          }
+        });
+      });
+  
+      // Store in localStorage only when totalPlaceOrder is available
+      // console.log("totalWin storing");
+      // console.log(totalWin);
+      localStorage.setItem('totalWin', totalWin.toString()); // Convert to string before storing
+    } else {
+      // totalPlaceOrder is not available or empty, retrieve stored value from localStorage
+      const storedTotalWin = localStorage.getItem('totalWin');
+      if (storedTotalWin) {
+        totalWin = parseFloat(storedTotalWin); // Parse the stored value as a float
+      }
+    }
+  
+    // console.log(totalWin);
+  }, [data, totalPlaceOrder]);
+  
+
 
 
   return (
@@ -192,7 +294,8 @@ const App = () => {
                               data-testid="amount-box_amount"
                               className="sc-bDpDS fPaONI"
                             >
-                              0
+                            {balance?.result?.availBalance
+}
                             </span>
                             <b
                               data-testid="amount-box_currency"
@@ -243,7 +346,7 @@ const App = () => {
                       className="ufCz6c1IqcZ7Cx4Or7Pi "
                       style={{ height: "3.4em" }}
                     >
-                      {data[0]?.runners?.map((runner) => {
+                      {data[0]?.runners?.map((runner, i) => {
                         const isRunnerClicked = clickedRunners.includes(
                           runner.id
                         );
@@ -252,13 +355,17 @@ const App = () => {
                             onClick={() => handlePlaceBet(data[0], runner)}
                             key={runner?.id}
                             className={`QIGYZANQUJzivDLQDHjm ${
-                              isRunnerClicked &&
-                              data[0]?.status === "OPEN" 
+                              isRunnerClicked && data[0]?.status === "OPEN"
                                 ? "border-green-color"
                                 : ""
-                            } ${
-                              data[0]?.status === "OPEN"  &&
-                              timer > 0
+                            } 
+                            ${
+                              WinnerRunner[`${runner?.id}-${i}`]
+                                ? "border-green-color"
+                                : ""
+                            } 
+                            ${
+                              data[0]?.status === "OPEN" && timer > 0
                                 ? ""
                                 : "disabled"
                             } `}
@@ -286,7 +393,7 @@ const App = () => {
                       style={{ height: "5.8em" }}
                     >
                       {data?.slice(1, 4)?.map((games) =>
-                        games?.runners?.map((runner) => {
+                        games?.runners?.map((runner, i) => {
                           const isRunnerClicked = clickedRunners.includes(
                             runner.id
                           );
@@ -297,8 +404,7 @@ const App = () => {
                               }}
                               key={runner?.id}
                               className={`${
-                                isRunnerClicked &&
-                                data[0]?.status === "OPEN" 
+                                isRunnerClicked && data[0]?.status === "OPEN"
                                   ? "border-green-color"
                                   : ""
                               } QIGYZANQUJzivDLQDHjm ${
@@ -306,10 +412,13 @@ const App = () => {
                                   ? "Jd_FQ2o2GATSrBeLJ2Rw"
                                   : ""
                               } ${
-                                data[0]?.status === "OPEN"  &&
-                                timer > 0
+                                data[0]?.status === "OPEN" && timer > 0
                                   ? ""
                                   : "disabled"
+                              }  ${
+                                WinnerRunner[`${runner?.id}-${i}`]
+                                  ? "border-green-color"
+                                  : ""
                               } `}
                               style={{
                                 width: "6.8em",
@@ -334,19 +443,19 @@ const App = () => {
                     <div className="B8EAcQGrnzn_Hl8mH6Hk">
                       <div className="TbDJtMH0Lesra_HZpmsu">
                         <span className="PzV26OxN2WKtuj8Y9FHR"></span>
-                        <span className={`dZ2gRLY67cqVBgNjZAFl  ${
-                                data[0]?.status === "OPEN" 
-                                   &&
-                                timer > 0
-                                  ? ""
-                                  : "disabled"
-                              }`}>
+                        <span
+                          className={`dZ2gRLY67cqVBgNjZAFl  ${
+                            data[0]?.status === "OPEN" && timer > 0
+                              ? ""
+                              : "disabled"
+                          }`}
+                        >
                           x{data[4]?.runners[0]?.back[0]?.price}
                         </span>
                         <span className="g4jdfxv4yJMhUCeEyYRD"></span>
                       </div>
                       <div className="HIZjOTeNz60Nkxq2F8yF">
-                        {data[4]?.runners?.map((runner) => {
+                        {data[4]?.runners?.map((runner, i) => {
                           const isRunnerClicked = clickedRunners.includes(
                             runner.id
                           );
@@ -355,17 +464,18 @@ const App = () => {
                               onClick={() => handlePlaceBet(data[4], runner)}
                               key={runner?.id}
                               className={`eiFJV7HiEPLhZOWBIVL_ ${
-                                isRunnerClicked &&
-                                data[0]?.status === "OPEN" 
+                                isRunnerClicked && data[0]?.status === "OPEN"
                                   ? "border-green-color"
                                   : ""
                               } ${
-                                data[0]?.status === "OPEN" &&
-                                  
-                                timer > 0
+                                data[0]?.status === "OPEN" && timer > 0
                                   ? ""
                                   : "disabled"
-                              }`}
+                              }  ${
+                                WinnerRunner[`${runner?.id}-${i}`]
+                                  ? "border-green-color"
+                                  : ""
+                              } `}
                               data-combination="09"
                               style={{ width: "7.2%" }}
                             >
@@ -398,6 +508,20 @@ const App = () => {
                   }}
                 >
                   {timer > 0 ? timer : 0}
+                </h3>
+                <h3
+                  style={{
+                    padding: "4px",
+                  }}
+                >
+                  Total Bet: {totalOrderPlaced}
+                </h3>
+                <h3
+                  style={{
+                    padding: "4px",
+                  }}
+                >
+                  Total Win: {storedTotalWin }
                 </h3>
               </div>
             </div>
