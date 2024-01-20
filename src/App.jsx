@@ -23,7 +23,7 @@ const App = () => {
   const [balance] = UseBalance();
   const storedTotalWin = localStorage.getItem('totalWin');
   const totalPlaceOrder = JSON.parse(localStorage.getItem("totalBetPlace"));
-
+console.log(balance);
   useEffect(() => {
     if (data?.length > 0) {
       const roundId = localStorage.getItem("roundId");
@@ -39,7 +39,7 @@ const App = () => {
   if (totalPlaceOrder) {
     for (const order of totalPlaceOrder) {
       totalOrderPlaced = parseFloat(
-        (totalOrderPlaced + order?.price).toFixed(2)
+        (totalOrderPlaced + order?.totalSize).toFixed(2)
       );
     }
   }
