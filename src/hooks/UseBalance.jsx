@@ -15,7 +15,7 @@ const UseBalance = () => {
       const encryptedData = UseEncryptData(generatedToken);
       const res = await axios.post("https://api7.live/api/account/diamond/balance", encryptedData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization:`Bearer ${token}`,
         },
       });
       const data = res.data;
