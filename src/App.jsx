@@ -21,13 +21,28 @@ const App = () => {
   const [clickedRunners, setClickedRunners] = useState([]);
   const { token } = useContextState();
   const [balance] = UseBalance();
-  const storedTotalWin = localStorage.getItem('totalWin');
-  const totalPlaceOrder = JSON.parse(localStorage.getItem("totalBetPlace"));
-console.log(balance);
+  const storedTotalWin = localStorage.getItem("totalWin");
+  const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
+  const [isWinner, setIsWinner] = useState(false);
+
+  useEffect(() => {
+    if (data?.length > 0) {
+      const getTotalPlaceOrder = JSON.parse(
+        localStorage.getItem("totalBetPlace")
+      );
+      if(!getTotalPlaceOrder){
+        localStorage.removeItem('totalWin')
+      }
+      const filterOrderByEventId = getTotalPlaceOrder?.filter(
+        (order) => order?.eventId === data[0]?.eventId
+      );
+      setTotalPlaceOrder(filterOrderByEventId);
+    }
+  }, [data]);
+
   useEffect(() => {
     if (data?.length > 0) {
       const roundId = localStorage.getItem("roundId");
-      // console.log(roundId === data[0]?.roundId);
       if (roundId != data[0]?.roundId) {
         localStorage.removeItem("totalBetPlace");
       }
@@ -67,13 +82,12 @@ console.log(balance);
         }
       );
       const data = res.data;
-
       if (data.success) {
         setUrl(data?.result?.url);
       }
     };
     getCasinoVideo();
-  }, []);
+  }, [token]);
 
   /* Get odds */
   useEffect(() => {
@@ -95,7 +109,6 @@ console.log(balance);
     const intervalId = setInterval(getGameDetails, 600);
     return () => clearInterval(intervalId);
   }, []);
-
 
   const handlePlaceBet = (game, runner) => {
     setPlaceBetValue({});
@@ -128,7 +141,6 @@ console.log(balance);
       return updatedRunners;
     });
   };
- 
 
   useEffect(() => {
     setPrice(placeBetValue?.price);
@@ -166,7 +178,6 @@ console.log(balance);
     const newChangedPrices = {};
     data?.forEach((item) => {
       item?.runners?.forEach((runner, runnerIndex) => {
-     
         if (runner?.status === "WINNER") {
           newChangedPrices[`${runner?.id}-${runnerIndex}`] = true;
           setWinnerRunner({ ...newChangedPrices });
@@ -179,63 +190,59 @@ console.log(balance);
     });
   }, [data, timer]);
 
-
-
   useEffect(() => {
     let totalWin = 0;
-  
+
     // Check if totalPlaceOrder is available
     if (totalPlaceOrder && totalPlaceOrder.length > 0) {
-      console.log({totalPlaceOrder});
-      data?.forEach(games => {
-        games?.runners?.forEach(runner => {
-          if (runner?.status === 'WINNER') {
-            const winnerFilter = totalPlaceOrder?.filter(
-              (order) => order?.id === runner?.id && runner?.status === "WINNER"
-            );
-  
-            const looserFilter = totalPlaceOrder?.filter(
-              (order) => order?.id === runner?.id && runner?.status === "ACTIVE"
-            );
-  
-            let WinnerSum = 0;
-            let looserSum = 0;
-  // console.log({looserFilter});
-  // console.log({winnerFilter});
-            if (looserFilter) {
-              for (const looser of looserFilter) {
-                looserSum = looserSum + -looser?.price;
-              }
+      // console.log({totalPlaceOrder});
+      data?.forEach((games) => {
+        games?.runners?.forEach((runner) => {
+          // if (runner?.status === 'WINNER' && runner?.status === 'ACTIVE'){
+            if(runner?.status === "WINNER"){
+              setIsWinner(true);
+            }else{
+              setIsWinner(false);
             }
-  
-            if (winnerFilter) {
-              for (const winner of winnerFilter) {
-                WinnerSum += winner?.price * winner?.totalSize - winner?.totalSize;
-              }
+        
+
+          const winnerFilter = totalPlaceOrder?.filter(
+            (order) => order?.id === runner?.id && runner?.status === "WINNER"
+          );
+
+          const looserFilter = totalPlaceOrder?.filter(
+            (order) => order?.id === runner?.id && runner?.status === "ACTIVE"
+          );
+
+          let WinnerSum = 0;
+          let looserSum = 0;
+          // console.log({ looserFilter });
+          // console.log({ winnerFilter });
+          if (looserFilter) {
+            for (const looser of looserFilter) {
+              looserSum = looserSum + -looser?.totalSize;
             }
-  
-            totalWin += looserSum + WinnerSum;
           }
+
+          if (winnerFilter) {
+            for (const winner of winnerFilter) {
+              WinnerSum +=
+                winner?.price * winner?.totalSize - winner?.totalSize;
+            }
+          }
+
+          totalWin += looserSum + WinnerSum;
+          // }
         });
       });
-  
-      // Store in localStorage only when totalPlaceOrder is available
-      // console.log("totalWin storing");
-      // console.log(totalWin);
-      localStorage.setItem('totalWin', totalWin.toString()); // Convert to string before storing
+      localStorage.setItem("totalWin", totalWin.toString()); //
     } else {
-      // totalPlaceOrder is not available or empty, retrieve stored value from localStorage
-      const storedTotalWin = localStorage.getItem('totalWin');
+      const storedTotalWin = localStorage.getItem("totalWin");
       if (storedTotalWin) {
-        totalWin = parseFloat(storedTotalWin); // Parse the stored value as a float
+        totalWin = parseFloat(storedTotalWin);
       }
     }
-  
-    // console.log(totalWin);
   }, [data, totalPlaceOrder]);
-  
-
-
 
   return (
     <div
@@ -294,8 +301,7 @@ console.log(balance);
                               data-testid="amount-box_amount"
                               className="sc-bDpDS fPaONI"
                             >
-                            {balance?.result?.availBalance
-}
+                              {balance?.result?.availBalance}
                             </span>
                             <b
                               data-testid="amount-box_currency"
@@ -521,7 +527,7 @@ console.log(balance);
                     padding: "4px",
                   }}
                 >
-                  Total Win: {storedTotalWin }
+                  Total Win: { storedTotalWin > 0 ? storedTotalWin : 0 }
                 </h3>
               </div>
             </div>

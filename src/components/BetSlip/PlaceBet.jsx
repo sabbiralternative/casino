@@ -57,7 +57,8 @@ const PlaceBet = ({
           const newBetPlace = {
             id: placeBetValue?.selectionId,
             price: price ? price : placeBetValue?.price,
-            totalSize
+            totalSize,
+            eventId:placeBetValue?.eventId
             
           };
           existingData.push(newBetPlace);

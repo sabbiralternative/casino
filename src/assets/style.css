@@ -1117,7 +1117,7 @@
 }
 /*! CSS Used from: Embedded */
 .bseTNUfpf1We9ygRGnGP {
-  border: 1px solid;
+  /* border: 1px solid; */
   border-color: rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.2)
     rgba(255, 255, 255, 0.336);
   -webkit-border-image: initial;
@@ -1126,9 +1126,9 @@
   border-image: initial;
 }
 .bseTNUfpf1We9ygRGnGP {
-  height: 11.1875em;
-  padding: 0.375em;
-  border-radius: 0.5em;
+  height: 12.7em;
+  /* padding: 0.375em; */
+  /* border-radius: 0.5em; */
   background: rgba(255, 255, 255, 0.04);
   position: relative;
   margin-bottom: 0.375em;
@@ -2234,14 +2234,12 @@ body::-webkit-scrollbar {
   margin-bottom: 0.5em;
 }
 
-
 .disabled {
   pointer-events: none;
   -webkit-transition: none !important;
   -moz-transition: none !important;
   transition: none !important;
-  opacity: .5;
-  
+  opacity: 0.5;
 }
 
 .bNaRSD {
@@ -2270,8 +2268,14 @@ body::-webkit-scrollbar {
   top: 0px;
   right: 0px;
   left: auto;
-  background: linear-gradient(90deg, rgb(82, 0, 0) 0%, rgb(107, 18, 9) 47.92%, rgb(82, 0, 0) 100%);
-  animation: 0.5s ease 0s 1 normal none running eihooV, 0.5s ease 1.7s 1 normal none running isXuwp;
+  background: linear-gradient(
+    90deg,
+    rgb(82, 0, 0) 0%,
+    rgb(107, 18, 9) 47.92%,
+    rgb(82, 0, 0) 100%
+  );
+  animation: 0.5s ease 0s 1 normal none running eihooV,
+    0.5s ease 1.7s 1 normal none running isXuwp;
 }
 
 .frtfnJ {
@@ -2320,5 +2324,10 @@ body::-webkit-scrollbar {
   position: absolute;
   bottom: 0px;
   left: 0px;
-  background: linear-gradient(270deg, rgba(255, 0, 0, 0) 0%, rgb(255, 0, 0) 52.08%, rgba(249, 4, 2, 0) 100%);
+  background: linear-gradient(
+    270deg,
+    rgba(255, 0, 0, 0) 0%,
+    rgb(255, 0, 0) 52.08%,
+    rgba(249, 4, 2, 0) 100%
+  );
 }

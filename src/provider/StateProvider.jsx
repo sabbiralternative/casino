@@ -5,6 +5,7 @@ const StateProvider = ({ children }) => {
   const [token, setToken] = useState("");
   const baseUrl = window.location.origin;
   const currentUrl = window.location.href;
+
   /* path */
   useEffect(() => {
     const relativeURL = currentUrl.replace(baseUrl, "");
@@ -16,6 +17,9 @@ const StateProvider = ({ children }) => {
     setToken,
     token,
   };
+  if (!token) {
+    return null;
+  }
   return (
     <StateContext.Provider value={stateInfo}>{children}</StateContext.Provider>
   );
