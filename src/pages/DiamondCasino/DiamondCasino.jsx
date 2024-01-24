@@ -226,6 +226,7 @@ const DiamondCasino = () => {
                     left: 0,
                     top: 0,
                     height: "100%",
+                    width:"100%",
                     border: 0,
                     overflowClipMargin: "clip !important",
                     overflow: "clip !important",

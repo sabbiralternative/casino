@@ -5,13 +5,14 @@ const BollywoodCasino = ({
   WinnerRunner,
   timer,
 }) => {
-
+  const words = ["A", "B", "C", "D", "E", "F"];
+  const KQJA = ['K-Q','J-A']
   return (
     <>
       <div className="ufCz6c1IqcZ7Cx4Or7Pi" style={{ height: "5.8em" }}>
         {data[0]?.runners?.map((runner, i) => {
           const isRunnerClicked = clickedRunners.includes(runner.id);
-          const convertedLetter = String.fromCharCode(97 + i).toUpperCase();
+
           return (
             <div
               onClick={() => handlePlaceBet(data[0], runner)}
@@ -27,7 +28,7 @@ const BollywoodCasino = ({
               data-combination="3"
               data-testid=""
             >
-              <span className="DYt62YNc0fa3zJ7_yedE">{convertedLetter}</span>
+              <span className="DYt62YNc0fa3zJ7_yedE">{words[i]}</span>
               <div className="ji7Xi0_VRN0zb5QA2gcA">
                 x{runner?.back[0]?.price}
               </div>
@@ -121,7 +122,7 @@ const BollywoodCasino = ({
               data-testid=""
             >
               <span className="DYt62YNc0fa3zJ7_yedE">
-                {runner?.name?.split(" ").at(-1)}
+                {KQJA[i]}
               </span>
               <div className="ji7Xi0_VRN0zb5QA2gcA">
                 x{runner?.back[0]?.price}

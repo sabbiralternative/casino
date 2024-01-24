@@ -5,6 +5,7 @@ const LuckySeven = ({
   WinnerRunner,
   timer,
 }) => {
+  const words = ['A-2-3','4-5-6','7-8-9','J-Q-K']
   return (
     <>
       <div className="ufCz6c1IqcZ7Cx4Or7Pi" style={{ height: "3.3em" }}>
@@ -191,7 +192,7 @@ const LuckySeven = ({
               data-combination="3"
               data-testid=""
             >
-              <span className="DYt62YNc0fa3zJ7_yedE">{runner?.name}</span>
+              <span className="DYt62YNc0fa3zJ7_yedE">{words[i]}</span>
               <div className="ji7Xi0_VRN0zb5QA2gcA">
                 x{runner?.back[0]?.price}
               </div>
