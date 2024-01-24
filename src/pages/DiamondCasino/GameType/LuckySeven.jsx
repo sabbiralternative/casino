@@ -132,7 +132,9 @@ const LuckySeven = ({
             <div
               onClick={() => handlePlaceBet(data[2], runner)}
               key={runner?.id}
-              className={`QIGYZANQUJzivDLQDHjm Jd_FQ2o2GATSrBeLJ2Rw2  ${
+              className={`QIGYZANQUJzivDLQDHjm 
+              ${i === 0 ? 'Jd_FQ2o2GATSrBeLJ2Rw2':''}
+              ${
                 isRunnerClicked && data[0]?.status === "OPEN"
                   ? "border-green-color"
                   : ""
