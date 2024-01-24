@@ -19,6 +19,7 @@ const PlaceBet = ({
   const [disabledButton, setDisabledButton] = useState(true);
   // console.log(data);
   // console.log(placeBetValue);
+  // console.log(totalSize);
   const handleOrderBets = () => {
     const generatedToken = UseTokenGenerator();
     const encryptedData = UseEncryptData([
@@ -58,18 +59,20 @@ const PlaceBet = ({
             id: placeBetValue?.selectionId,
             price: price ? price : placeBetValue?.price,
             totalSize,
-            eventId:placeBetValue?.eventId
-            
+            eventId: placeBetValue?.eventId,
           };
           existingData.push(newBetPlace);
           const updatedDataString = JSON.stringify(existingData);
           localStorage.setItem("totalBetPlace", updatedDataString);
+          const balance = JSON.parse(localStorage.getItem("balance"));
+          const newBalance = balance - totalSize;
+          localStorage.setItem("balance", JSON.stringify(newBalance));
+
           setPlaceBetValue({});
           setDisabledButton(false);
           toast.success("Bet has been placed !");
           setClickedRunners([]);
         } else {
-        
           // setPlaceBetValue({})
           // setDisabledButton(false)
           toast.error(data?.error?.status[0]?.description);

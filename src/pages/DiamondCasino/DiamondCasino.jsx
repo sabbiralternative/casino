@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import UseTokenGenerator from "../../hooks/UseTokenGenerator";
-import UseEncryptData from "../../hooks/UseEncryptData";
 import BetSlip from "../../components/BetSlip/BetSlip";
 import PlaceBet from "../../components/BetSlip/PlaceBet";
 import { Toaster } from "react-hot-toast";
@@ -11,10 +9,10 @@ import AmarAkbarAnthony from "./GameType/AmarAkbarAnthony";
 import BollywoodCasino from "./GameType/BollywoodCasino";
 import LuckySeven from "./GameType/LuckySeven";
 import { useParams } from "react-router-dom";
+import useGetVideo from "../../hooks/useGetVideo";
 
 const DiamondCasino = () => {
   const { eventId: eventIdParams } = useParams();
-  const [url, setUrl] = useState("");
   const [placeBetValue, setPlaceBetValue] = useState({});
   const [price, setPrice] = useState("");
   const [totalSize, setTotalSize] = useState("");
@@ -24,6 +22,18 @@ const DiamondCasino = () => {
   const storedTotalWin = localStorage.getItem("totalWin");
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
   const { eventId, eventTypeId } = JSON.parse(localStorage.getItem("casino"));
+  const {videoUrl} = useGetVideo()
+
+
+  useEffect(() => {
+    if (storedTotalWin > 0) {
+      const balance = JSON.parse(localStorage.getItem("balance"));
+      const newBalance = balance + parseFloat(storedTotalWin);
+      console.log(balance);
+      console.log(storedTotalWin);
+      localStorage.setItem("balance", JSON.stringify(newBalance));
+    }
+  }, [storedTotalWin]);
 
   useEffect(() => {
     if (oddsData?.length > 0) {
@@ -59,31 +69,6 @@ const DiamondCasino = () => {
     }
   }
 
-  useEffect(() => {
-    const generatedToken = UseTokenGenerator();
-    const encryptedVideoData = UseEncryptData({
-      eventId: 10004,
-      eventTypeId: 1000,
-      token: generatedToken,
-    });
-    const getCasinoVideo = async () => {
-      const res = await axios.post(
-        "https://api7.live/api/exchange/diamond/accessToken",
-        encryptedVideoData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = res.data;
-      if (data.success) {
-        setUrl(data?.result?.url);
-      }
-    };
-    getCasinoVideo();
-  }, [token]);
-
   /* Get odds */
   useEffect(() => {
     const getGameDetails = async () => {
@@ -93,7 +78,7 @@ const DiamondCasino = () => {
         },
       });
       const data = res.data;
-
+      // console.log(data);
       if (data.success) {
         setOddsData(data.result);
       }
@@ -101,7 +86,7 @@ const DiamondCasino = () => {
     getGameDetails();
     const intervalId = setInterval(getGameDetails, 600);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [eventId, eventTypeId, setOddsData, token]);
 
   const handlePlaceBet = (game, runner) => {
     setPlaceBetValue({});
@@ -224,6 +209,8 @@ const DiamondCasino = () => {
       }
     }
   }, [oddsData, totalPlaceOrder]);
+  // console.log(eventIdParams);
+  // console.log(oddsData);
 
   return (
     <>
@@ -234,7 +221,7 @@ const DiamondCasino = () => {
               <div className="bseTNUfpf1We9ygRGnGP">
                 <iframe
                   allow="fullscreen;"
-                  src={url}
+                  src={videoUrl && videoUrl}
                   style={{
                     left: 0,
                     top: 0,
@@ -245,7 +232,8 @@ const DiamondCasino = () => {
                   }}
                 ></iframe>
               </div>
-              {eventIdParams == "10004" || eventIdParams == "10005" ? (
+              {(eventIdParams == "10004" || eventIdParams == "10005") &&
+              oddsData?.length > 0 ? (
                 <AmarAkbarAnthony
                   WinnerRunner={WinnerRunner}
                   clickedRunners={clickedRunners}
@@ -254,7 +242,7 @@ const DiamondCasino = () => {
                   timer={timer}
                 />
               ) : null}
-              {eventIdParams === "10006" && oddsData?.length > 0 && (
+              {eventIdParams === "10006" && oddsData?.length > 0 ? (
                 <BollywoodCasino
                   WinnerRunner={WinnerRunner}
                   clickedRunners={clickedRunners}
@@ -262,8 +250,16 @@ const DiamondCasino = () => {
                   handlePlaceBet={handlePlaceBet}
                   timer={timer}
                 />
+              ) : null}
+              {(eventIdParams === "10001" || eventIdParams === "10002" || eventIdParams === "10003" )&& oddsData?.length > 0 && (
+                <LuckySeven
+                  WinnerRunner={WinnerRunner}
+                  clickedRunners={clickedRunners}
+                  data={oddsData}
+                  handlePlaceBet={handlePlaceBet}
+                  timer={timer}
+                />
               )}
-              {eventIdParams === "10001" && <LuckySeven />}
             </div>
           </div>
           <div className="df2usAO24F5Qe9k7Y0dH" style={{ height: "8em" }}>

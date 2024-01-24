@@ -5,6 +5,7 @@ const BollywoodCasino = ({
   WinnerRunner,
   timer,
 }) => {
+
   return (
     <>
       <div className="ufCz6c1IqcZ7Cx4Or7Pi" style={{ height: "5.8em" }}>

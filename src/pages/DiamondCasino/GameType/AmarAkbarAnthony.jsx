@@ -5,6 +5,7 @@ const AmarAkbarAnthony = ({
   WinnerRunner,
   timer,
 }) => {
+
   return (
     <>
       <div className="ufCz6c1IqcZ7Cx4Or7Pi " style={{ height: "3.4em" }}>
