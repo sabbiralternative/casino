@@ -8,19 +8,14 @@ const Main = () => {
   const [sidebar, setSidebar] = useState(false);
   const [balance] = UseBalance();
   const { oddsData } = useContextState();
-  const [storedBalance, setStoredBalance] = useState();
 
   useEffect(() => {
     const deviceWidth = (window.innerWidth * 0.04266674418).toFixed(4);
     setFontSize(deviceWidth);
     localStorage.removeItem("balance");
-    localStorage.setItem(
-      "balance",
-      JSON.stringify(balance?.result?.availBalance)
-    );
-    const storageBalance = localStorage.getItem("balance");
-    setStoredBalance( storageBalance)
+    localStorage.setItem("balance", JSON.stringify(balance));
   }, [balance]);
+  const storageBalance = localStorage.getItem("balance");
 
   return (
     <div
@@ -81,8 +76,8 @@ const Main = () => {
                               data-testid="amount-box_amount"
                               className="sc-bDpDS fPaONI"
                             >
-                              {storedBalance &&
-                                parseFloat(storedBalance).toFixed(2)}
+                              {storageBalance &&
+                                parseFloat(storageBalance).toFixed(2)}
                             </span>
                             <b
                               data-testid="amount-box_currency"

@@ -4,9 +4,10 @@ import { API } from "../utils/Constant";
 import UseTokenGenerator from "./UseTokenGenerator";
 import UseEncryptData from "./UseEncryptData";
 import useContextState from "./useContextState";
+import { useParams } from "react-router-dom";
 
 const useGetVideo = () => {
-  const { eventId, eventTypeId } = JSON.parse(localStorage.getItem("casino"));
+  const { eventId } = useParams();
   const { token } = useContextState();
   const { data: videoUrl } = useQuery({
     queryKey: ["iFrameVideo"],
@@ -14,7 +15,7 @@ const useGetVideo = () => {
       const generatedToken = UseTokenGenerator();
       const encryptedVideoData = UseEncryptData({
         eventId: eventId,
-        eventTypeId: eventTypeId,
+        eventTypeId: 1000,
         token: generatedToken,
       });
       const res = await axios.post(API.accessToken, encryptedVideoData, {
@@ -24,7 +25,7 @@ const useGetVideo = () => {
       return data;
     },
   });
-  return { videoUrl};
+  return { videoUrl };
 };
 
 export default useGetVideo;

@@ -12,8 +12,7 @@ import { useParams } from "react-router-dom";
 import useGetVideo from "../../hooks/useGetVideo";
 
 const DiamondCasino = () => {
-  const { eventId: eventIdParams } = useParams();
-
+  const { eventId } = useParams();
   const [placeBetValue, setPlaceBetValue] = useState({});
   const [price, setPrice] = useState("");
   const [totalSize, setTotalSize] = useState("");
@@ -22,16 +21,12 @@ const DiamondCasino = () => {
   const { token, oddsData, setOddsData } = useContextState();
   const storedTotalWin = localStorage.getItem("totalWin");
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
-  const casinoParams = JSON.parse(localStorage.getItem("casino")) || {};
-  const { eventId, eventTypeId } = casinoParams || null;
   const { videoUrl } = useGetVideo();
 
   useEffect(() => {
     if (storedTotalWin > 0) {
       const balance = JSON.parse(localStorage.getItem("balance"));
       const newBalance = balance + parseFloat(storedTotalWin);
-      console.log(balance);
-      console.log(storedTotalWin);
       localStorage.setItem("balance", JSON.stringify(newBalance));
     }
   }, [storedTotalWin]);
@@ -73,7 +68,7 @@ const DiamondCasino = () => {
   /* Get odds */
   useEffect(() => {
     const getGameDetails = async () => {
-      const res = await axios.get(`${API.odds}/${eventTypeId}/${eventId}`, {
+      const res = await axios.get(`${API.odds}/${1000}/${eventId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -87,7 +82,7 @@ const DiamondCasino = () => {
     getGameDetails();
     const intervalId = setInterval(getGameDetails, 600);
     return () => clearInterval(intervalId);
-  }, [eventId, eventTypeId, setOddsData, token]);
+  }, [setOddsData, token, eventId]);
 
   const handlePlaceBet = (game, runner) => {
     setPlaceBetValue({});
@@ -140,7 +135,7 @@ const DiamondCasino = () => {
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [roundIdForTimer, timer]);
+  }, [roundIdForTimer]);
   /* Timer end */
 
   const isBorderActiveStatus = oddsData[0]?.status;
@@ -210,7 +205,7 @@ const DiamondCasino = () => {
       }
     }
   }, [oddsData, totalPlaceOrder]);
-  // console.log(eventIdParams);
+  // console.log(eventId);
   // console.log(oddsData);
 
   return (
@@ -234,7 +229,7 @@ const DiamondCasino = () => {
                   }}
                 ></iframe>
               </div>
-              {(eventIdParams == "10004" || eventIdParams == "10005") &&
+              {(eventId == "10004" || eventId == "10005") &&
               oddsData?.length > 0 ? (
                 <AmarAkbarAnthony
                   WinnerRunner={WinnerRunner}
@@ -244,7 +239,7 @@ const DiamondCasino = () => {
                   timer={timer}
                 />
               ) : null}
-              {eventIdParams === "10006" && oddsData?.length > 0 ? (
+              {eventId === "10006" && oddsData?.length > 0 ? (
                 <BollywoodCasino
                   WinnerRunner={WinnerRunner}
                   clickedRunners={clickedRunners}
@@ -253,9 +248,9 @@ const DiamondCasino = () => {
                   timer={timer}
                 />
               ) : null}
-              {(eventIdParams === "10001" ||
-                eventIdParams === "10002" ||
-                eventIdParams === "10003") &&
+              {(eventId === "10001" ||
+                eventId === "10002" ||
+                eventId === "10003") &&
                 oddsData?.length > 0 && (
                   <LuckySeven
                     WinnerRunner={WinnerRunner}

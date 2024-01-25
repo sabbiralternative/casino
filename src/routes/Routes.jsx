@@ -1,18 +1,20 @@
-import { createBrowserRouter, useLocation } from "react-router-dom";
+import { createBrowserRouter} from "react-router-dom";
 import Home from "../pages/Home/Home";
 import Main from "../layout/Main";
 import DiamondCasino from "../pages/DiamondCasino/DiamondCasino";
+import ErrorElement from '../pages/ErrorElement/ErrorElement'
 
-const DiamondCasinoWrapper = () => {
-  const location = useLocation();
-  const textAfterBaseUrl = location.pathname.substring(1);
-  return textAfterBaseUrl.length <= 30 ? <DiamondCasino /> : null;
-};
+// const DiamondCasinoWrapper = () => {
+//   const location = useLocation();
+//   const textAfterBaseUrl = location.pathname.substring(1);
+//   return textAfterBaseUrl.length <= 30 ? <DiamondCasino /> : null;
+// };
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Main />,
+    errorElement:<ErrorElement/>,
     children: [
       {
         path: "/",
@@ -20,7 +22,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/:eventId",
-        element: <DiamondCasinoWrapper />,
+        element: <DiamondCasino/>,
       },
     ],
   },

@@ -66,8 +66,7 @@ const PlaceBet = ({
           localStorage.setItem("totalBetPlace", updatedDataString);
           const balance = JSON.parse(localStorage.getItem("balance"));
           const newBalance = balance - totalSize;
-          localStorage.setItem("balance", JSON.stringify(newBalance));
-
+          localStorage.setItem("balance", newBalance);
           setPlaceBetValue({});
           setDisabledButton(false);
           toast.success("Bet has been placed !");

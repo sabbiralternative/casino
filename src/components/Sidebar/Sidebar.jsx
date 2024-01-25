@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import CloseModalClickOutside from "../../hooks/CloseModalClickOutside";
 import useDiamondCasinoName from "../../hooks/useDiamondCasinoName";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = ({ sidebar, setSidebar }) => {
   const { diamondCasinoNav } = useDiamondCasinoName();
@@ -11,13 +11,6 @@ const Sidebar = ({ sidebar, setSidebar }) => {
   });
   const navigate = useNavigate();
   const saveGameDetails = (games) => {
-    const diamondCasino = {
-      eventId: games?.eventId,
-      eventTypeId: games?.eventTypeId,
-      slug: games?.slug,
-    };
-    localStorage.removeItem("casino");
-    localStorage.setItem("casino", JSON.stringify(diamondCasino));
     setSidebar(false);
     navigate(`/${games?.eventId}`);
   };
@@ -37,7 +30,10 @@ const Sidebar = ({ sidebar, setSidebar }) => {
           />
         </div>
         <div className="sc-cepbVR hgJfd">
-          <div className="sc-etKGGb bhWlty">
+          <Link 
+          to='/'
+          onClick={() => setSidebar(false)}
+          className="sc-etKGGb bhWlty">
             <span className="sc-cDltVh kWWYqr">
               <svg
                 width="100%"
@@ -52,7 +48,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
               </svg>
             </span>
             <span className="sc-einZSS gkiEbN">Home</span>
-          </div>
+          </Link>
           <div className="sc-etKGGb bhWlty">
             <span className="sc-cDltVh kWWYqr">
               <svg

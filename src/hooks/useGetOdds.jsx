@@ -2,13 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect } from "react";
 import { API } from "../utils/Constant";
+import { useParams } from "react-router-dom";
 
 const useGetOdds = () => {
-  const { eventId, eventTypeId } = JSON.parse(localStorage.getItem("casino"));
+  const { eventId } = useParams();
   const { data, refetch: refetchOdds } = useQuery({
     queryKey: ["odds"],
     queryFn: async () => {
-      const res = await axios.post(`${API.odds}/${eventTypeId}/${eventId}`);
+      const res = await axios.post(`${API.odds}/${1000}/${eventId}`);
       const data = res.data;
       if (data.success) {
         return data.result;
