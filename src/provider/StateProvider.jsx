@@ -1,11 +1,9 @@
 import { createContext, useEffect, useState } from "react";
 
-
 export const StateContext = createContext(null);
 const StateProvider = ({ children }) => {
-  
-  const [token, setToken] = useState("");
   const [oddsData, setOddsData] = useState([]);
+  const [token, setToken] = useState("");
   const baseUrl = window.location.origin;
   const currentUrl = window.location.href;
 
@@ -14,21 +12,31 @@ const StateProvider = ({ children }) => {
     const relativeURL = currentUrl.replace(baseUrl, "");
     const tokenSplit = relativeURL?.split("/");
     const token = tokenSplit.at(1);
-    setToken(token);
+    if (token && token?.length > 20) {
+      localStorage.setItem("token", token);
+      const newUrl = baseUrl + relativeURL.replace(`/${token}`, "");
+      window.history.replaceState({}, document.title, newUrl);
+    }
   }, [baseUrl, currentUrl]);
 
   useEffect(() => {
-    // Set the base URL dynamically using a dynamic import
-    import.meta.env.BASE_URL = token ? `/${token}` : '/';
-  }, [token]);
-  const stateInfo = {
-    setToken,
-    token,
-    oddsData,setOddsData
-  };
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []); 
+
   if (!token) {
-    return null;
+    return;
   }
+
+  const stateInfo = {
+    oddsData,
+    setOddsData,
+    token,
+    setToken,
+  };
+
   return (
     <StateContext.Provider value={stateInfo}>{children}</StateContext.Provider>
   );

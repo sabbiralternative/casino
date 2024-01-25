@@ -13,6 +13,7 @@ import useGetVideo from "../../hooks/useGetVideo";
 
 const DiamondCasino = () => {
   const { eventId: eventIdParams } = useParams();
+
   const [placeBetValue, setPlaceBetValue] = useState({});
   const [price, setPrice] = useState("");
   const [totalSize, setTotalSize] = useState("");
@@ -21,9 +22,9 @@ const DiamondCasino = () => {
   const { token, oddsData, setOddsData } = useContextState();
   const storedTotalWin = localStorage.getItem("totalWin");
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
-  const { eventId, eventTypeId } = JSON.parse(localStorage.getItem("casino"));
-  const {videoUrl} = useGetVideo()
-
+  const casinoParams = JSON.parse(localStorage.getItem("casino")) || {};
+  const { eventId, eventTypeId } = casinoParams || null;
+  const { videoUrl } = useGetVideo();
 
   useEffect(() => {
     if (storedTotalWin > 0) {
@@ -226,7 +227,7 @@ const DiamondCasino = () => {
                     left: 0,
                     top: 0,
                     height: "100%",
-                    width:"100%",
+                    width: "100%",
                     border: 0,
                     overflowClipMargin: "clip !important",
                     overflow: "clip !important",
@@ -252,15 +253,18 @@ const DiamondCasino = () => {
                   timer={timer}
                 />
               ) : null}
-              {(eventIdParams === "10001" || eventIdParams === "10002" || eventIdParams === "10003" )&& oddsData?.length > 0 && (
-                <LuckySeven
-                  WinnerRunner={WinnerRunner}
-                  clickedRunners={clickedRunners}
-                  data={oddsData}
-                  handlePlaceBet={handlePlaceBet}
-                  timer={timer}
-                />
-              )}
+              {(eventIdParams === "10001" ||
+                eventIdParams === "10002" ||
+                eventIdParams === "10003") &&
+                oddsData?.length > 0 && (
+                  <LuckySeven
+                    WinnerRunner={WinnerRunner}
+                    clickedRunners={clickedRunners}
+                    data={oddsData}
+                    handlePlaceBet={handlePlaceBet}
+                    timer={timer}
+                  />
+                )}
             </div>
           </div>
           <div className="df2usAO24F5Qe9k7Y0dH" style={{ height: "8em" }}>

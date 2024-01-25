@@ -2,10 +2,8 @@ import { useRef } from "react";
 import CloseModalClickOutside from "../../hooks/CloseModalClickOutside";
 import useDiamondCasinoName from "../../hooks/useDiamondCasinoName";
 import { useNavigate } from "react-router-dom";
-import useContextState from "../../hooks/useContextState";
 
 const Sidebar = ({ sidebar, setSidebar }) => {
-  const { token } = useContextState();
   const { diamondCasinoNav } = useDiamondCasinoName();
   const leftMenuRef = useRef();
   CloseModalClickOutside(leftMenuRef, () => {
@@ -21,7 +19,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
     localStorage.removeItem("casino");
     localStorage.setItem("casino", JSON.stringify(diamondCasino));
     setSidebar(false);
-    navigate(`/${token}/${games?.eventId}`);
+    navigate(`/${games?.eventId}`);
   };
   return (
     <div>

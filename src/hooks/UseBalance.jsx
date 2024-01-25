@@ -6,11 +6,13 @@ import useContextState from "./useContextState";
 
 const UseBalance = () => {
   const { token } = useContextState();
+  
   const { data: balance, refetch: refetchBalance } = useQuery({
     queryKey: ["balance"],
     queryFn: async () => {
       const generatedToken = UseTokenGenerator();
       const encryptedData = UseEncryptData(generatedToken);
+     
       const res = await axios.post(
         "https://api7.live/api/account/diamond/balance",
         encryptedData,
@@ -21,6 +23,7 @@ const UseBalance = () => {
         }
       );
       const data = res.data;
+
       return data;
     },
   });
