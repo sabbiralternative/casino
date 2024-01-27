@@ -3,7 +3,7 @@ import UseBalance from "../hooks/UseBalance";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { Outlet } from "react-router-dom";
 import useContextState from "../hooks/useContextState";
-import  { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 const Main = () => {
   const [fontSize, setFontSize] = useState("");
   const [sidebar, setSidebar] = useState(false);
@@ -77,7 +77,8 @@ const Main = () => {
                               data-testid="amount-box_amount"
                               className="sc-bDpDS fPaONI"
                             >
-                              {balance  && 
+                              {balance &&
+                                storageBalance &&
                                 parseFloat(storageBalance).toFixed(2)}
                             </span>
                             <b
@@ -114,7 +115,7 @@ const Main = () => {
           <div className="sc-cspYLC beuanj"></div>
         </div>
       </div>
-      <Toaster containerStyle={{ top: "40px" }}/>
+      <Toaster containerStyle={{ top: "40px" }} />
     </div>
   );
 };
