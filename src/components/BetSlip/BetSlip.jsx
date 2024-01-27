@@ -1,8 +1,9 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import CloseModalClickOutside from "../../hooks/CloseModalClickOutside";
 
 const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
   const betSlipRef = useRef();
+  const [editTotalSize, setEditTotalSize] = useState(true);
   const handleRemoveLastIndex = () => {
     const lastIndex = totalSize?.toString().slice(0, -1);
     setTotalSize(lastIndex);
@@ -12,12 +13,20 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
     setIsOpenBetEdit(false);
   });
 
+  const handleAddValue = (num) => {
+    if (totalSize && editTotalSize) {
+      setTotalSize("");
+      setEditTotalSize(false);
+      setTotalSize((prev) => prev + num);
+    } else {
+      setTotalSize((prev) => prev + num);
+    }
+  };
+
   return (
     <div className="sc-eWHaVC hErkOS">
       <div data-testid="glass-backdrop" className="sc-cgjDci aZvWD"></div>
-      <div className="sc-heIBml bQxKNy"
-      ref={betSlipRef}
-      >
+      <div className="sc-heIBml bQxKNy" ref={betSlipRef}>
         <div className="sc-leQnM ldiKfU">
           <p
             className="sc-kTbCBX gxfXUI"
@@ -90,7 +99,7 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
         <div className="sc-beeQDc cKErfm"></div>
         <div className="sc-dYoqmx dIxiiB">
           <button
-            onClick={() => setTotalSize((prev) => prev + "1")}
+            onClick={() => handleAddValue("1")}
             data-value="1"
             className="sc-ghzrUh jvQLjQ"
             style={{ color: "rgb(var(--white))" }}
@@ -98,7 +107,7 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
             <span>1</span>
           </button>
           <button
-            onClick={() => setTotalSize((prev) => prev + "2")}
+            onClick={() => handleAddValue("2")}
             data-value="2"
             className="sc-ghzrUh jvQLjQ"
             style={{ color: "rgb(var(--white))" }}
@@ -106,7 +115,7 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
             <span>2</span>
           </button>
           <button
-            onClick={() => setTotalSize((prev) => prev + "3")}
+            onClick={() => handleAddValue("3")}
             data-value="3"
             className="sc-ghzrUh jvQLjQ"
             style={{ color: "rgb(var(--white))" }}
@@ -114,7 +123,7 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
             <span>3</span>
           </button>
           <button
-            onClick={() => setTotalSize((prev) => prev + "4")}
+            onClick={() => handleAddValue("4")}
             data-value="4"
             className="sc-ghzrUh jvQLjQ"
             style={{ color: "rgb(var(--white))" }}
@@ -122,7 +131,7 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
             <span>4</span>
           </button>
           <button
-            onClick={() => setTotalSize((prev) => prev + "5")}
+            onClick={() => handleAddValue("5")}
             data-value="5"
             className="sc-ghzrUh jvQLjQ"
             style={{ color: "rgb(var(--white))" }}
@@ -130,7 +139,7 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
             <span>5</span>
           </button>
           <button
-            onClick={() => setTotalSize((prev) => prev + "6")}
+            onClick={() => handleAddValue("6")}
             data-value="6"
             className="sc-ghzrUh jvQLjQ"
             style={{ color: "rgb(var(--white))" }}
@@ -138,7 +147,7 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
             <span>6</span>
           </button>
           <button
-            onClick={() => setTotalSize((prev) => prev + "7")}
+            onClick={() => handleAddValue("7")}
             data-value="7"
             className="sc-ghzrUh jvQLjQ"
             style={{ color: "rgb(var(--white))" }}
@@ -146,7 +155,7 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
             <span>7</span>
           </button>
           <button
-            onClick={() => setTotalSize((prev) => prev + "8")}
+            onClick={() => handleAddValue("8")}
             data-value="8"
             className="sc-ghzrUh jvQLjQ"
             style={{ color: "rgb(var(--white))" }}
@@ -154,7 +163,7 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
             <span>8</span>
           </button>
           <button
-            onClick={() => setTotalSize((prev) => prev + "9")}
+            onClick={() => handleAddValue("9")}
             data-value="9"
             className="sc-ghzrUh jvQLjQ"
             style={{ color: "rgb(var(--white))" }}
@@ -164,7 +173,7 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
         </div>
         <div className="sc-dYOqWG cSgZWC">
           <button
-            onClick={() => setTotalSize((prev) => prev + "0")}
+            onClick={() => handleAddValue("0")}
             data-value="0"
             className="sc-ghzrUh hzbNIm"
             style={{ color: "rgb(var(--white))" }}
@@ -172,12 +181,12 @@ const BetSlip = ({ setTotalSize, totalSize, setIsOpenBetEdit }) => {
             0
           </button>
           <button
-            onClick={() => setTotalSize((prev) => prev + ".")}
+            onClick={() => setTotalSize("")}
             data-value="."
             className="sc-ghzrUh hzbNIm"
-            style={{ color: "rgb(var(--white))" }}
+            style={{ color: "rgb(var(--white))", textTransform: "uppercase" }}
           >
-            .
+            Clear
           </button>
           <button
             onClick={handleRemoveLastIndex}

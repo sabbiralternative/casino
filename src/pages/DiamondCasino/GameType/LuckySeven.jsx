@@ -5,7 +5,7 @@ const LuckySeven = ({
   WinnerRunner,
   timer,
 }) => {
-  const words = ['A-2-3','4-5-6','7-8-9','J-Q-K']
+  const words = ["A-2-3", "4-5-6", "7-8-9", "J-Q-K"];
   return (
     <>
       <div className="ufCz6c1IqcZ7Cx4Or7Pi" style={{ height: "3.3em" }}>
@@ -33,8 +33,8 @@ const LuckySeven = ({
                             } 
               `}
               style={{ width: "6.8em" }}
-              data-combination="3"
-              data-testid=""
+              // data-combination="3"
+              // data-testid=""
             >
               <span className="DYt62YNc0fa3zJ7_yedE">Under 7</span>
               <div className="ji7Xi0_VRN0zb5QA2gcA">
@@ -56,20 +56,21 @@ const LuckySeven = ({
           {/*  <!-- dont link this button --> */}
         </div>
 
-        {data[0]?.runners?.slice(1, 2)?.map((runner, i) => {
+        {data[0]?.runners?.slice(1)?.map((runner, i) => {
+      
           const isRunnerClicked = clickedRunners.includes(runner.id);
           return (
             <div
               onClick={() => handlePlaceBet(data[0], runner)}
               key={runner?.id}
-              className={`QIGYZANQUJzivDLQDHjm
+              className={`QIGYZANQUJzivDLQDHjm  
               ${
                 isRunnerClicked && data[0]?.status === "OPEN"
                   ? "border-green-color"
                   : ""
               } 
                             ${
-                              WinnerRunner[`${runner?.id}-${i}`]
+                              WinnerRunner[`${runner?.id}-${i +1}`]
                                 ? "border-green-color"
                                 : ""
                             } 
@@ -80,8 +81,8 @@ const LuckySeven = ({
                             } 
               `}
               style={{ width: "6.8em" }}
-              data-combination="3"
-              data-testid=""
+              // data-combination="3"
+              // data-testid=""
             >
               <span className="DYt62YNc0fa3zJ7_yedE">Over 7</span>
               <div className="ji7Xi0_VRN0zb5QA2gcA">
@@ -134,7 +135,7 @@ const LuckySeven = ({
               onClick={() => handlePlaceBet(data[2], runner)}
               key={runner?.id}
               className={`QIGYZANQUJzivDLQDHjm 
-              ${i === 0 ? 'Jd_FQ2o2GATSrBeLJ2Rw2':''}
+              ${i === 0 ? "Jd_FQ2o2GATSrBeLJ2Rw2" : ""}
               ${
                 isRunnerClicked && data[0]?.status === "OPEN"
                   ? "border-green-color"

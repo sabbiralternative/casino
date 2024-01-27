@@ -11,7 +11,6 @@ import { useParams } from "react-router-dom";
 import useGetVideo from "../../hooks/useGetVideo";
 import Loader from "../../components/Loader/Loader";
 
-
 const DiamondCasino = () => {
   const { eventId } = useParams();
   const [placeBetValue, setPlaceBetValue] = useState({});
@@ -24,7 +23,7 @@ const DiamondCasino = () => {
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
   const { videoUrl } = useGetVideo();
   const [loading, setLoading] = useState(true);
-
+  const [fullScreenVideo, setFullScreenVideo] = useState(false);
   useEffect(() => {
     if (storedTotalWin > 0) {
       const balance = JSON.parse(localStorage.getItem("balance"));
@@ -210,16 +209,23 @@ const DiamondCasino = () => {
   // console.log(eventId);
   // console.log(oddsData);
   // console.log(oddsData);
+
   if (loading) {
     return <Loader />;
   }
+
   return (
     <>
       <div className="">
         <div className="IZi6anh0l0XCig_RhoF_">
           <div>
             <div>
-              <div className="bseTNUfpf1We9ygRGnGP">
+              <div
+                onClick={() => setFullScreenVideo(!fullScreenVideo)}
+                className={`bseTNUfpf1We9ygRGnGP ${
+                  fullScreenVideo ? "fullScreen" : ""
+                }`}
+              >
                 <iframe
                   allow="fullscreen;"
                   src={videoUrl && videoUrl}
@@ -233,6 +239,16 @@ const DiamondCasino = () => {
                     overflow: "clip !important",
                   }}
                 ></iframe>
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "transparent",
+                  }}
+                ></div>
               </div>
               {(eventId == "10004" || eventId == "10005") &&
               oddsData?.length > 0 ? (
