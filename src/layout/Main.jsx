@@ -77,7 +77,7 @@ const Main = () => {
                               data-testid="amount-box_amount"
                               className="sc-bDpDS fPaONI"
                             >
-                              {storageBalance &&
+                              {balance  && 
                                 parseFloat(storageBalance).toFixed(2)}
                             </span>
                             <b

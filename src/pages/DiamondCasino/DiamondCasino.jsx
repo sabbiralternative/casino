@@ -9,6 +9,8 @@ import BollywoodCasino from "./GameType/BollywoodCasino";
 import LuckySeven from "./GameType/LuckySeven";
 import { useParams } from "react-router-dom";
 import useGetVideo from "../../hooks/useGetVideo";
+import Loader from "../../components/Loader/Loader";
+
 
 const DiamondCasino = () => {
   const { eventId } = useParams();
@@ -21,6 +23,7 @@ const DiamondCasino = () => {
   const storedTotalWin = localStorage.getItem("totalWin");
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
   const { videoUrl } = useGetVideo();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (storedTotalWin > 0) {
@@ -75,6 +78,7 @@ const DiamondCasino = () => {
       const data = res.data;
       // console.log(data);
       if (data.success) {
+        setLoading(false);
         setOddsData(data.result);
       }
     };
@@ -187,8 +191,7 @@ const DiamondCasino = () => {
 
             if (winnerFilter) {
               for (const winner of winnerFilter) {
-                WinnerSum +=
-                  winner?.price * winner?.totalSize;
+                WinnerSum += winner?.price * winner?.totalSize;
               }
             }
 
@@ -207,7 +210,9 @@ const DiamondCasino = () => {
   // console.log(eventId);
   // console.log(oddsData);
   // console.log(oddsData);
-
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <>
       <div className="">
