@@ -31,7 +31,7 @@ const PlaceBet = ({
         marketId.some(
           (substring) =>
             bet?.marketId?.includes(substring) &&
-            bet?.marketId?.includes(placeBetValue?.marketId)
+            bet?.marketId?.includes(placeBetValue?.marketId) && placeBetValue?.selectionId !== bet?.id
         )
       );
 
