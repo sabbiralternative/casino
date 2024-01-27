@@ -3,6 +3,7 @@ import UseBalance from "../hooks/UseBalance";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { Outlet } from "react-router-dom";
 import useContextState from "../hooks/useContextState";
+import  { Toaster } from 'react-hot-toast';
 const Main = () => {
   const [fontSize, setFontSize] = useState("");
   const [sidebar, setSidebar] = useState(false);
@@ -113,6 +114,7 @@ const Main = () => {
           <div className="sc-cspYLC beuanj"></div>
         </div>
       </div>
+      <Toaster containerStyle={{ top: "40px" }}/>
     </div>
   );
 };

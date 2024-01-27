@@ -3,6 +3,7 @@ import UseEncryptData from "../../hooks/UseEncryptData";
 import UseTokenGenerator from "../../hooks/UseTokenGenerator";
 import toast from "react-hot-toast";
 import useContextState from "../../hooks/useContextState";
+import { API } from "../../utils/Constant";
 
 const PlaceBet = ({
   setTotalSize,
@@ -20,7 +21,24 @@ const PlaceBet = ({
   // console.log(data);
   // console.log(placeBetValue);
   // console.log(totalSize);
+  const marketId = [".evenodd", ".color"];
+  // console.log(data);
   const handleOrderBets = () => {
+    const placedBet = localStorage.getItem("totalBetPlace");
+    if (placedBet) {
+      const parsedPlacedBet = JSON.parse(placedBet);
+      const isExistPlaceBet = parsedPlacedBet.find((bet) =>
+        marketId.some(
+          (substring) =>
+            bet?.marketId?.includes(substring) &&
+            bet?.marketId?.includes(placeBetValue?.marketId)
+        )
+      );
+
+      if (isExistPlaceBet) {
+        return toast.error("You already placed bet in this market !");
+      }
+    }
     const generatedToken = UseTokenGenerator();
     const encryptedData = UseEncryptData([
       {
@@ -39,7 +57,7 @@ const PlaceBet = ({
       },
     ]);
 
-    fetch("https://api7.live/api/exchange/diamond/order", {
+    fetch(API.order, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -60,6 +78,7 @@ const PlaceBet = ({
             price: price ? price : placeBetValue?.price,
             totalSize,
             eventId: placeBetValue?.eventId,
+            marketId: placeBetValue?.marketId,
           };
           existingData.push(newBetPlace);
           const updatedDataString = JSON.stringify(existingData);
@@ -69,6 +88,7 @@ const PlaceBet = ({
           localStorage.setItem("balance", newBalance);
           setPlaceBetValue({});
           setDisabledButton(false);
+          console.log("object");
           toast.success("Bet has been placed !");
           setClickedRunners([]);
         } else {

@@ -8,6 +8,7 @@ import PlaceBet from "./components/BetSlip/PlaceBet";
 import { Toaster } from "react-hot-toast";
 import UseBalance from "./hooks/UseBalance";
 import useContextState from "./hooks/useContextState";
+
 const App = () => {
   const [fontSize, setFontSize] = useState("");
   const [sidebar, setSidebar] = useState(false);

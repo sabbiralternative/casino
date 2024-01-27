@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import BetSlip from "../../components/BetSlip/BetSlip";
 import PlaceBet from "../../components/BetSlip/PlaceBet";
-import { Toaster } from "react-hot-toast";
 import useContextState from "../../hooks/useContextState";
 import { API } from "../../utils/Constant";
 import AmarAkbarAnthony from "./GameType/AmarAkbarAnthony";
@@ -189,7 +188,7 @@ const DiamondCasino = () => {
             if (winnerFilter) {
               for (const winner of winnerFilter) {
                 WinnerSum +=
-                  winner?.price * winner?.totalSize - winner?.totalSize;
+                  winner?.price * winner?.totalSize;
               }
             }
 
@@ -206,6 +205,7 @@ const DiamondCasino = () => {
     }
   }, [oddsData, totalPlaceOrder]);
   // console.log(eventId);
+  // console.log(oddsData);
   // console.log(oddsData);
 
   return (
@@ -311,7 +311,6 @@ const DiamondCasino = () => {
       <div className="sc-fmzyuX bxpLFZ">
         <div className="sc-cspYLC beuanj"></div>
       </div>
-      <Toaster containerStyle={{ top: "40px" }} />
     </>
   );
 };
