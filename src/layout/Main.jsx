@@ -4,11 +4,12 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import { Outlet } from "react-router-dom";
 import useContextState from "../hooks/useContextState";
 import { Toaster } from "react-hot-toast";
+
 const Main = () => {
   const [fontSize, setFontSize] = useState("");
   const [sidebar, setSidebar] = useState(false);
   const [balance] = UseBalance();
-  const { oddsData } = useContextState();
+  const { oddsData, isFullScreen, setIsFullScreen } = useContextState();
 
   useEffect(() => {
     const deviceWidth = (window.innerWidth * 0.04266674418).toFixed(4);
@@ -18,12 +19,29 @@ const Main = () => {
   }, [balance]);
   const storageBalance = localStorage.getItem("balance");
 
+  useEffect(() => {
+    setIsFullScreen(false);
+  }, []);
   return (
     <div
       className="App AppMobile AppGame"
-      style={{ fontSize: `${fontSize}px` }}
+      style={{
+        fontSize: `${fontSize}px`,
+        ...(isFullScreen
+          ? {
+              position: "fixed",
+              top: 0,
+              left: 0,
+              zIndex: 9999,
+              height: "100vh",
+              width: "100%",
+              overflowY: "scroll",
+            }
+          : {}),
+      }}
     >
       {/*   <!-- device width x 0.04266674418 , answer value upto 4 decimal--> */}
+
       <div className="AppInner" style={{ fontSize: `${fontSize}px` }}>
         {/*  <!-- device width x 0.04266674418,  answer value upto 4 decimal --> */}
         <div className="cMnblziyKBAjFO7y0HNB">
@@ -79,6 +97,7 @@ const Main = () => {
                             >
                               {balance &&
                                 storageBalance &&
+                                !isNaN(parseFloat(storageBalance)) &&
                                 parseFloat(storageBalance).toFixed(2)}
                             </span>
                             <b

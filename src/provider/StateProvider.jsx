@@ -7,6 +7,7 @@ export const StateContext = createContext(null);
 const StateProvider = ({ children }) => {
   const [oddsData, setOddsData] = useState([]);
   const [token, setToken] = useState("");
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const baseUrl = window.location.origin;
   const currentUrl = window.location.href;
 
@@ -52,6 +53,7 @@ const StateProvider = ({ children }) => {
     setOddsData,
     token,
     setToken,
+    isFullScreen, setIsFullScreen
   };
 
   return (

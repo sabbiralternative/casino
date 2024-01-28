@@ -18,12 +18,12 @@ const DiamondCasino = () => {
   const [totalSize, setTotalSize] = useState("");
   const [isOpenBetEdit, setIsOpenBetEdit] = useState(false);
   const [clickedRunners, setClickedRunners] = useState([]);
-  const { token, oddsData, setOddsData } = useContextState();
+  const { token, oddsData, setOddsData, setIsFullScreen } = useContextState();
   const storedTotalWin = localStorage.getItem("totalWin");
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
   const { videoUrl } = useGetVideo();
   const [loading, setLoading] = useState(true);
-  const [fullScreenVideo, setFullScreenVideo] = useState(false);
+
   useEffect(() => {
     if (storedTotalWin > 0) {
       const balance = JSON.parse(localStorage.getItem("balance"));
@@ -209,6 +209,9 @@ const DiamondCasino = () => {
   // console.log(eventId);
   // console.log(oddsData);
   // console.log(oddsData);
+  const toggleFullScreen = () => {
+    setIsFullScreen(true);
+  };
 
   if (loading) {
     return <Loader />;
@@ -221,10 +224,8 @@ const DiamondCasino = () => {
           <div>
             <div>
               <div
-                onClick={() => setFullScreenVideo(!fullScreenVideo)}
-                className={`bseTNUfpf1We9ygRGnGP ${
-                  fullScreenVideo ? "fullScreen" : ""
-                }`}
+                onClick={toggleFullScreen}
+                className={`bseTNUfpf1We9ygRGnGP `}
               >
                 <iframe
                   allow="fullscreen;"
