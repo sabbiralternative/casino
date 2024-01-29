@@ -10,6 +10,7 @@ import LuckySeven from "./GameType/LuckySeven";
 import { useParams } from "react-router-dom";
 import useGetVideo from "../../hooks/useGetVideo";
 import Loader from "../../components/Loader/Loader";
+import RecentWinner from "./RecentWinner";
 
 const DiamondCasino = () => {
   const { eventId } = useParams();
@@ -23,6 +24,8 @@ const DiamondCasino = () => {
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
   const { videoUrl } = useGetVideo();
   const [loading, setLoading] = useState(true);
+  const [showPlaceBet, setShowPlaceBet] = useState(false);
+  const [showRecentWinner, setShowRecentWinner] = useState(true);
 
   useEffect(() => {
     if (storedTotalWin > 0) {
@@ -87,6 +90,8 @@ const DiamondCasino = () => {
   }, [setOddsData, token, eventId]);
 
   const handlePlaceBet = (game, runner) => {
+    setShowRecentWinner(false)
+    setShowPlaceBet(true);
     setPlaceBetValue({});
     setPlaceBetValue({
       price: runner?.back[0]?.price,
@@ -229,6 +234,7 @@ const DiamondCasino = () => {
               >
                 <iframe
                   allow="fullscreen;"
+                  allowFullScreen={true}
                   src={videoUrl && videoUrl}
                   style={{
                     left: 0,
@@ -282,21 +288,26 @@ const DiamondCasino = () => {
                     timer={timer}
                   />
                 )}
+            { showRecentWinner &&  <RecentWinner data={oddsData} />}
             </div>
           </div>
-          <div className="df2usAO24F5Qe9k7Y0dH" style={{ height: "8em" }}>
-            <PlaceBet
-              totalSize={totalSize}
-              placeBetValue={placeBetValue}
-              setTotalSize={setTotalSize}
-              setIsOpenBetEdit={setIsOpenBetEdit}
-              price={price}
-              setClickedRunners={setClickedRunners}
-              setPlaceBetValue={setPlaceBetValue}
-              timer={timer}
-              data={oddsData}
-            />
-          </div>
+          {showPlaceBet && (
+            <div className="df2usAO24F5Qe9k7Y0dH" style={{ height: "8em" }}>
+              <PlaceBet
+              setShowRecentWinner={setShowRecentWinner}
+                setShowPlaceBet={setShowPlaceBet}
+                totalSize={totalSize}
+                placeBetValue={placeBetValue}
+                setTotalSize={setTotalSize}
+                setIsOpenBetEdit={setIsOpenBetEdit}
+                price={price}
+                setClickedRunners={setClickedRunners}
+                setPlaceBetValue={setPlaceBetValue}
+                timer={timer}
+                data={oddsData}
+              />
+            </div>
+          )}
           <h3
             style={{
               padding: "4px",

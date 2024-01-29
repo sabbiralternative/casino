@@ -23,6 +23,8 @@ const Main = () => {
     setIsFullScreen(false);
   }, []);
   return (
+   <>
+
     <div
       className="App AppMobile AppGame"
       style={{
@@ -136,6 +138,8 @@ const Main = () => {
       </div>
       <Toaster containerStyle={{ top: "40px" }} />
     </div>
+    
+   </>
   );
 };
 

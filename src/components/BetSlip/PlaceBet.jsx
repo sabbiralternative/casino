@@ -15,6 +15,8 @@ const PlaceBet = ({
   setPlaceBetValue,
   timer,
   data,
+  setShowPlaceBet,
+  setShowRecentWinner
 }) => {
   const { token } = useContextState();
   const [disabledButton, setDisabledButton] = useState(true);
@@ -68,6 +70,8 @@ const PlaceBet = ({
       .then((data) => {
         console.log(data);
         if (data?.success) {
+          setShowRecentWinner(true)
+          setShowPlaceBet(false)
           const totalBetPlace = localStorage.getItem("totalBetPlace");
           let existingData = [];
           if (totalBetPlace) {
