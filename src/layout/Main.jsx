@@ -9,7 +9,7 @@ const Main = () => {
   const [fontSize, setFontSize] = useState("");
   const [sidebar, setSidebar] = useState(false);
   const [balance] = UseBalance();
-  const { oddsData, isFullScreen, setIsFullScreen } = useContextState();
+  const { oddsData} = useContextState();
 
   useEffect(() => {
     const deviceWidth = (window.innerWidth * 0.04266674418).toFixed(4);
@@ -19,9 +19,7 @@ const Main = () => {
   }, [balance]);
   const storageBalance = localStorage.getItem("balance");
 
-  useEffect(() => {
-    setIsFullScreen(false);
-  }, []);
+
   return (
    <>
 
@@ -29,17 +27,7 @@ const Main = () => {
       className="App AppMobile AppGame"
       style={{
         fontSize: `${fontSize}px`,
-        ...(isFullScreen
-          ? {
-              position: "fixed",
-              top: 0,
-              left: 0,
-              zIndex: 9999,
-              height: "100vh",
-              width: "100%",
-              overflowY: "scroll",
-            }
-          : {}),
+       
       }}
     >
       {/*   <!-- device width x 0.04266674418 , answer value upto 4 decimal--> */}

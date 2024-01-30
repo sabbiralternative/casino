@@ -19,13 +19,26 @@ const DiamondCasino = () => {
   const [totalSize, setTotalSize] = useState("");
   const [isOpenBetEdit, setIsOpenBetEdit] = useState(false);
   const [clickedRunners, setClickedRunners] = useState([]);
-  const { token, oddsData, setOddsData, setIsFullScreen } = useContextState();
+  const { token, oddsData, setOddsData } = useContextState();
   const storedTotalWin = localStorage.getItem("totalWin");
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
   const { videoUrl } = useGetVideo();
   const [loading, setLoading] = useState(true);
   const [showPlaceBet, setShowPlaceBet] = useState(false);
   const [showRecentWinner, setShowRecentWinner] = useState(true);
+  const [showTapToPlay, setShowTapToPlay] = useState(false);
+
+  useEffect(() => {
+    const isTapToPlay = localStorage.getItem("isTapToPlay");
+    if (!isTapToPlay) {
+      setShowTapToPlay(true);
+    }
+  }, []);
+
+  const handleCloseTapToPlay = () => {
+    setShowTapToPlay(false);
+    localStorage.setItem("isTapToPlay", "false");
+  };
 
   useEffect(() => {
     if (storedTotalWin > 0) {
@@ -90,7 +103,7 @@ const DiamondCasino = () => {
   }, [setOddsData, token, eventId]);
 
   const handlePlaceBet = (game, runner) => {
-    setShowRecentWinner(false)
+    setShowRecentWinner(false);
     setShowPlaceBet(true);
     setPlaceBetValue({});
     setPlaceBetValue({
@@ -215,7 +228,28 @@ const DiamondCasino = () => {
   // console.log(oddsData);
   // console.log(oddsData);
   const toggleFullScreen = () => {
-    setIsFullScreen(true);
+    if (
+      (document.fullScreenElement && document.fullScreenElement !== null) ||
+      (!document.mozFullScreen && !document.webkitIsFullScreen)
+    ) {
+      if (document.documentElement.requestFullScreen) {
+        document.documentElement.requestFullScreen();
+      } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.webkitRequestFullScreen) {
+        document.documentElement.webkitRequestFullScreen(
+          Element.ALLOW_KEYBOARD_INPUT
+        );
+      }
+    } else {
+      if (document.cancelFullScreen) {
+        document.cancelFullScreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitCancelFullScreen) {
+        document.webkitCancelFullScreen();
+      }
+    }
   };
 
   if (loading) {
@@ -224,6 +258,34 @@ const DiamondCasino = () => {
 
   return (
     <>
+      <div
+        onClick={handleCloseTapToPlay}
+        className="css-1lkepkh e1bi9tuq11"
+        data-e2e="preloader"
+        style={{ color: "rgb(255, 255, 255)" }}
+      >
+        <div
+          className=" css-17pdoa6 e1bi9tuq0"
+          style={{
+            background: "rgb(0, 0, 0)",
+            transform: `translateY(${showTapToPlay ? "0" : "-1200"}px)`,
+          }}
+        >
+          <div
+            className="css-1te3lh6 e1bi9tuq9"
+            style={{
+              backgroundImage:
+                'url("https://conf.ezassets.io/CustomAssets/operator_background/newdragontiger150.jpg")',
+            }}
+          ></div>
+
+          <div className="css-17zrqdz e1bi9tuq2">
+            <span color="#ffffff" className="css-1fvtxkv e1bi9tuq10"></span>
+            <p className="css-4lpehb e1bi9tuq1">Tap to play</p>
+          </div>
+        </div>
+      </div>
+
       <div className="">
         <div className="IZi6anh0l0XCig_RhoF_">
           <div>
@@ -288,13 +350,13 @@ const DiamondCasino = () => {
                     timer={timer}
                   />
                 )}
-            { showRecentWinner &&  <RecentWinner data={oddsData} />}
+              {showRecentWinner && <RecentWinner data={oddsData} />}
             </div>
           </div>
           {showPlaceBet && (
             <div className="df2usAO24F5Qe9k7Y0dH" style={{ height: "8em" }}>
               <PlaceBet
-              setShowRecentWinner={setShowRecentWinner}
+                setShowRecentWinner={setShowRecentWinner}
                 setShowPlaceBet={setShowPlaceBet}
                 totalSize={totalSize}
                 placeBetValue={placeBetValue}
