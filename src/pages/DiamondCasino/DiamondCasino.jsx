@@ -29,16 +29,13 @@ const DiamondCasino = () => {
   const [showTapToPlay, setShowTapToPlay] = useState(false);
 
   useEffect(() => {
-    const isTapToPlay = localStorage.getItem("isTapToPlay");
+    const isTapToPlay = sessionStorage.getItem("isTapToPlay");
     if (!isTapToPlay) {
       setShowTapToPlay(true);
     }
   }, []);
 
-  const handleCloseTapToPlay = () => {
-    setShowTapToPlay(false);
-    localStorage.setItem("isTapToPlay", "false");
-  };
+
 
   useEffect(() => {
     if (storedTotalWin > 0) {
@@ -228,6 +225,8 @@ const DiamondCasino = () => {
   // console.log(oddsData);
   // console.log(oddsData);
   const toggleFullScreen = () => {
+    setShowTapToPlay(false);
+    sessionStorage.setItem("isTapToPlay", "false");
     if (
       (document.fullScreenElement && document.fullScreenElement !== null) ||
       (!document.mozFullScreen && !document.webkitIsFullScreen)
@@ -259,7 +258,7 @@ const DiamondCasino = () => {
   return (
     <>
       <div
-        onClick={handleCloseTapToPlay}
+        onClick={toggleFullScreen}
         className="css-1lkepkh e1bi9tuq11"
         data-e2e="preloader"
         style={{ color: "rgb(255, 255, 255)" }}
@@ -291,7 +290,6 @@ const DiamondCasino = () => {
           <div>
             <div>
               <div
-                onClick={toggleFullScreen}
                 className={`bseTNUfpf1We9ygRGnGP `}
               >
                 <iframe
