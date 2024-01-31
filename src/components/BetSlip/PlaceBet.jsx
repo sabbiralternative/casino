@@ -83,6 +83,7 @@ const PlaceBet = ({
             totalSize,
             eventId: placeBetValue?.eventId,
             marketId: placeBetValue?.marketId,
+            name:placeBetValue?.name
           };
           existingData.push(newBetPlace);
           const updatedDataString = JSON.stringify(existingData);
@@ -92,7 +93,7 @@ const PlaceBet = ({
           localStorage.setItem("balance", newBalance);
           setPlaceBetValue({});
           setDisabledButton(false);
-          console.log("object");
+         
           toast.success("Bet has been placed !");
           setClickedRunners([]);
         } else {

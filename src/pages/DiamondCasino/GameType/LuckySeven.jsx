@@ -1,40 +1,33 @@
+import getClassName from "../../../hooks/getClassName";
+
 const LuckySeven = ({
   data,
   clickedRunners,
   handlePlaceBet,
   WinnerRunner,
   timer,
+  placeBetBorder,
 }) => {
   const words = ["A-2-3", "4-5-6", "7-8-9", "J-Q-K"];
   return (
     <>
       <div className="ufCz6c1IqcZ7Cx4Or7Pi" style={{ height: "3.3em" }}>
-        {data[0]?.runners?.slice(0, 1)?.map((runner, i) => {
-          const isRunnerClicked = clickedRunners.includes(runner.id);
+        {data[0]?.runners?.slice(0, 1)?.map((runner) => {
           return (
             <div
               onClick={() => handlePlaceBet(data[0], runner)}
               key={runner?.id}
               className={`QIGYZANQUJzivDLQDHjm
-              ${
-                isRunnerClicked && data[0]?.status === "OPEN"
-                  ? "border-green-color"
-                  : ""
-              } 
-                            ${
-                              WinnerRunner[`${runner?.id}-${i}`]
-                                ? "border-green-color"
-                                : ""
-                            } 
-                            ${
-                              data[0]?.status === "OPEN" && timer > 0
-                                ? ""
-                                : "disabled"
-                            } 
+              ${getClassName(
+                clickedRunners,
+                runner,
+                data[0],
+                WinnerRunner,
+                placeBetBorder,
+                timer
+              )}
               `}
               style={{ width: "6.8em" }}
-              // data-combination="3"
-              // data-testid=""
             >
               <span className="DYt62YNc0fa3zJ7_yedE">Under 7</span>
               <div className="ji7Xi0_VRN0zb5QA2gcA">
@@ -56,33 +49,22 @@ const LuckySeven = ({
           {/*  <!-- dont link this button --> */}
         </div>
 
-        {data[0]?.runners?.slice(1)?.map((runner, i) => {
-      
-          const isRunnerClicked = clickedRunners.includes(runner.id);
+        {data[0]?.runners?.slice(1)?.map((runner) => {
           return (
             <div
               onClick={() => handlePlaceBet(data[0], runner)}
               key={runner?.id}
               className={`QIGYZANQUJzivDLQDHjm  
-              ${
-                isRunnerClicked && data[0]?.status === "OPEN"
-                  ? "border-green-color"
-                  : ""
-              } 
-                            ${
-                              WinnerRunner[`${runner?.id}-${i +1}`]
-                                ? "border-green-color"
-                                : ""
-                            } 
-                            ${
-                              data[0]?.status === "OPEN" && timer > 0
-                                ? ""
-                                : "disabled"
-                            } 
+              ${getClassName(
+                clickedRunners,
+                runner,
+                data[0],
+                WinnerRunner,
+                placeBetBorder,
+                timer
+              )}
               `}
               style={{ width: "6.8em" }}
-              // data-combination="3"
-              // data-testid=""
             >
               <span className="DYt62YNc0fa3zJ7_yedE">Over 7</span>
               <div className="ji7Xi0_VRN0zb5QA2gcA">
@@ -95,27 +77,19 @@ const LuckySeven = ({
       </div>
 
       <div className="ufCz6c1IqcZ7Cx4Or7Pi" style={{ height: "3.3em" }}>
-        {data[1]?.runners?.map((runner, i) => {
-          const isRunnerClicked = clickedRunners.includes(runner.id);
+        {data[1]?.runners?.map((runner) => {
           return (
             <div
               onClick={() => handlePlaceBet(data[1], runner)}
               key={runner?.id}
-              className={`QIGYZANQUJzivDLQDHjm border-gold-color  ${
-                isRunnerClicked && data[0]?.status === "OPEN"
-                  ? "border-green-color"
-                  : ""
-              } 
-                          ${
-                            WinnerRunner[`${runner?.id}-${i}`]
-                              ? "border-green-color"
-                              : ""
-                          } 
-                          ${
-                            data[0]?.status === "OPEN" && timer > 0
-                              ? ""
-                              : "disabled"
-                          } `}
+              className={`QIGYZANQUJzivDLQDHjm border-gold-color   ${getClassName(
+                clickedRunners,
+                runner,
+                data[0],
+                WinnerRunner,
+                placeBetBorder,
+                timer
+              )} `}
               style={{ width: "5em", height: "2.1875em" }}
               data-combination="3"
               data-testid=""
@@ -129,28 +103,20 @@ const LuckySeven = ({
           );
         })}
         {data[2]?.runners?.map((runner, i) => {
-          const isRunnerClicked = clickedRunners.includes(runner.id);
           return (
             <div
               onClick={() => handlePlaceBet(data[2], runner)}
               key={runner?.id}
               className={`QIGYZANQUJzivDLQDHjm 
               ${i === 0 ? "Jd_FQ2o2GATSrBeLJ2Rw2" : ""}
-              ${
-                isRunnerClicked && data[0]?.status === "OPEN"
-                  ? "border-green-color"
-                  : ""
-              } 
-                          ${
-                            WinnerRunner[`${runner?.id}-${i}`]
-                              ? "border-green-color"
-                              : ""
-                          } 
-                          ${
-                            data[0]?.status === "OPEN" && timer > 0
-                              ? ""
-                              : "disabled"
-                          } `}
+              ${getClassName(
+                clickedRunners,
+                runner,
+                data[0],
+                WinnerRunner,
+                placeBetBorder,
+                timer
+              )} `}
               style={{ width: "5em", height: "2.1875em" }}
               data-combination="3"
               data-testid=""
@@ -167,27 +133,19 @@ const LuckySeven = ({
 
       <div className="ufCz6c1IqcZ7Cx4Or7Pi" style={{ height: "3.3em" }}>
         {data[3]?.runners?.map((runner, i) => {
-          const isRunnerClicked = clickedRunners.includes(runner.id);
           return (
             <div
               onClick={() => handlePlaceBet(data[3], runner)}
               key={runner?.id}
               className={`QIGYZANQUJzivDLQDHjm border-gold-color
-            ${
-              isRunnerClicked && data[0]?.status === "OPEN"
-                ? "border-green-color"
-                : ""
-            } 
-                          ${
-                            WinnerRunner[`${runner?.id}-${i}`]
-                              ? "border-green-color"
-                              : ""
-                          } 
-                          ${
-                            data[0]?.status === "OPEN" && timer > 0
-                              ? ""
-                              : "disabled"
-                          }
+              ${getClassName(
+                clickedRunners,
+                runner,
+                data[0],
+                WinnerRunner,
+                placeBetBorder,
+                timer
+              )}
             `}
               style={{ width: "5em", height: "2.1875em" }}
               data-combination="3"
@@ -216,28 +174,20 @@ const LuckySeven = ({
           <span className="g4jdfxv4yJMhUCeEyYRD"></span>
         </div>
         <div className="HIZjOTeNz60Nkxq2F8yF">
-          {data[4]?.runners?.map((runner, i) => {
-            const isRunnerClicked = clickedRunners.includes(runner.id);
+          {data[4]?.runners?.map((runner) => {
             return (
               <div
                 onClick={() => handlePlaceBet(data[4], runner)}
                 key={runner?.id}
                 className={`eiFJV7HiEPLhZOWBIVL_
-              ${
-                isRunnerClicked && data[0]?.status === "OPEN"
-                  ? "border-green-color"
-                  : ""
-              } 
-                            ${
-                              WinnerRunner[`${runner?.id}-${i}`]
-                                ? "border-green-color"
-                                : ""
-                            } 
-                            ${
-                              data[0]?.status === "OPEN" && timer > 0
-                                ? ""
-                                : "disabled"
-                            }
+                ${getClassName(
+                  clickedRunners,
+                  runner,
+                  data[0],
+                  WinnerRunner,
+                  placeBetBorder,
+                  timer
+                )}
               `}
                 data-combination="09"
                 style={{ width: "7.2%" }}

@@ -4,6 +4,13 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
+.border-red-color {
+  border: 1px solid #f77474 !important;
+  box-shadow: 0 0 .5em #852b2b9c;
+  background: #ffffff1f;
+}
+
+
 a {
   text-decoration: none;
 }

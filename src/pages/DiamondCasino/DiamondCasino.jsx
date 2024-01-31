@@ -11,6 +11,8 @@ import { useParams } from "react-router-dom";
 import useGetVideo from "../../hooks/useGetVideo";
 import Loader from "../../components/Loader/Loader";
 import RecentWinner from "./RecentWinner";
+import useFullScreenToggle from "../../hooks/useFullScreenToggle";
+import DragonTigerLion from "./GameType/DragonTigerLion";
 
 const DiamondCasino = () => {
   const { eventId } = useParams();
@@ -19,14 +21,16 @@ const DiamondCasino = () => {
   const [totalSize, setTotalSize] = useState("");
   const [isOpenBetEdit, setIsOpenBetEdit] = useState(false);
   const [clickedRunners, setClickedRunners] = useState([]);
-  const { token, oddsData, setOddsData } = useContextState();
+  const { token, oddsData, setOddsData, setShowTapToPlay, showTapToPlay } =
+    useContextState();
   const storedTotalWin = localStorage.getItem("totalWin");
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
   const { videoUrl } = useGetVideo();
   const [loading, setLoading] = useState(true);
   const [showPlaceBet, setShowPlaceBet] = useState(false);
   const [showRecentWinner, setShowRecentWinner] = useState(true);
-  const [showTapToPlay, setShowTapToPlay] = useState(false);
+  const [placeBetBorder, setPlaceBetBorder] = useState({});
+  const { toggleFullScreen } = useFullScreenToggle();
 
   useEffect(() => {
     const isTapToPlay = sessionStorage.getItem("isTapToPlay");
@@ -34,8 +38,6 @@ const DiamondCasino = () => {
       setShowTapToPlay(true);
     }
   }, []);
-
-
 
   useEffect(() => {
     if (storedTotalWin > 0) {
@@ -118,6 +120,7 @@ const DiamondCasino = () => {
       isBettable: game?.isBettable,
       maxLiabilityPerBet: game?.maxLiabilityPerBet,
       borderActive: true,
+      name: runner?.name,
     });
 
     setClickedRunners([]);
@@ -151,6 +154,9 @@ const DiamondCasino = () => {
         setTimer((prevCount) => prevCount - 1);
       }, 1000);
       return () => clearInterval(interval);
+    } else if (timer > 1) {
+      setShowPlaceBet(false);
+      setShowRecentWinner(true);
     }
   }, [roundIdForTimer]);
   /* Timer end */
@@ -168,12 +174,12 @@ const DiamondCasino = () => {
   useEffect(() => {
     const newChangedPrices = {};
     oddsData?.forEach((item) => {
-      item?.runners?.forEach((runner, runnerIndex) => {
+      item?.runners?.forEach((runner) => {
         if (runner?.status === "WINNER") {
-          newChangedPrices[`${runner?.id}-${runnerIndex}`] = true;
+          newChangedPrices[`${runner?.id}-${runner?.name}`] = true;
           setWinnerRunner({ ...newChangedPrices });
           setTimeout(() => {
-            newChangedPrices[`${runner?.id}-${runnerIndex}`] = false;
+            newChangedPrices[`${runner?.id}-${runner?.name}`] = false;
             setWinnerRunner({ ...newChangedPrices });
           }, 300);
         }
@@ -182,11 +188,20 @@ const DiamondCasino = () => {
   }, [oddsData, timer]);
 
   useEffect(() => {
+    const placedBetBorder = {};
     let totalWin = 0;
+    setPlaceBetBorder({});
+    if (totalPlaceOrder && totalPlaceOrder?.length > 0) {
+      totalPlaceOrder?.forEach((singleOrder) => {
+        placedBetBorder[`${singleOrder?.id}-${singleOrder?.name}`] = true;
+        setPlaceBetBorder({ ...placedBetBorder });
+      });
+    }
     if (totalPlaceOrder && totalPlaceOrder.length > 0) {
       oddsData?.forEach((games) => {
         games?.runners?.forEach((runner) => {
           if (runner?.status === "WINNER") {
+            setPlaceBetBorder({});
             const winnerFilter = totalPlaceOrder?.filter(
               (order) => order?.id === runner?.id && runner?.status === "WINNER"
             );
@@ -224,32 +239,6 @@ const DiamondCasino = () => {
   // console.log(eventId);
   // console.log(oddsData);
   // console.log(oddsData);
-  const toggleFullScreen = () => {
-    setShowTapToPlay(false);
-    sessionStorage.setItem("isTapToPlay", "false");
-    if (
-      (document.fullScreenElement && document.fullScreenElement !== null) ||
-      (!document.mozFullScreen && !document.webkitIsFullScreen)
-    ) {
-      if (document.documentElement.requestFullScreen) {
-        document.documentElement.requestFullScreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullScreen) {
-        document.documentElement.webkitRequestFullScreen(
-          Element.ALLOW_KEYBOARD_INPUT
-        );
-      }
-    } else {
-      if (document.cancelFullScreen) {
-        document.cancelFullScreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitCancelFullScreen) {
-        document.webkitCancelFullScreen();
-      }
-    }
-  };
 
   if (loading) {
     return <Loader />;
@@ -289,9 +278,7 @@ const DiamondCasino = () => {
         <div className="IZi6anh0l0XCig_RhoF_">
           <div>
             <div>
-              <div
-                className={`bseTNUfpf1We9ygRGnGP `}
-              >
+              <div className={`bseTNUfpf1We9ygRGnGP `}>
                 <iframe
                   allow="fullscreen;"
                   allowFullScreen={true}
@@ -325,6 +312,7 @@ const DiamondCasino = () => {
                   data={oddsData}
                   handlePlaceBet={handlePlaceBet}
                   timer={timer}
+                  placeBetBorder={placeBetBorder}
                 />
               ) : null}
               {eventId === "10006" && oddsData?.length > 0 ? (
@@ -334,6 +322,7 @@ const DiamondCasino = () => {
                   data={oddsData}
                   handlePlaceBet={handlePlaceBet}
                   timer={timer}
+                  placeBetBorder={placeBetBorder}
                 />
               ) : null}
               {(eventId === "10001" ||
@@ -346,12 +335,25 @@ const DiamondCasino = () => {
                     data={oddsData}
                     handlePlaceBet={handlePlaceBet}
                     timer={timer}
+                    placeBetBorder={placeBetBorder}
                   />
                 )}
-              {showRecentWinner && <RecentWinner data={oddsData} />}
+              {eventId === "10007" && oddsData?.length > 0 && (
+                <DragonTigerLion
+                  WinnerRunner={WinnerRunner}
+                  clickedRunners={clickedRunners}
+                  data={oddsData}
+                  handlePlaceBet={handlePlaceBet}
+                  timer={timer}
+                  placeBetBorder={placeBetBorder}
+                />
+              )}
+              {showRecentWinner || timer < 1 ? (
+                <RecentWinner data={oddsData} />
+              ) : null}
             </div>
           </div>
-          {showPlaceBet && (
+          {showPlaceBet && timer > 0 && (
             <div className="df2usAO24F5Qe9k7Y0dH" style={{ height: "8em" }}>
               <PlaceBet
                 setShowRecentWinner={setShowRecentWinner}
@@ -375,20 +377,24 @@ const DiamondCasino = () => {
           >
             {timer > 0 ? timer : 0}
           </h3>
-          <h3
+       
+          {storedTotalWin > 0 ? (
+            <h3
+              style={{
+                padding: "4px",
+              }}
+            >
+              Last Win: {storedTotalWin}
+            </h3>
+          ):(
+            <h3
             style={{
               padding: "4px",
             }}
           >
             Total Bet: {totalOrderPlaced}
           </h3>
-          <h3
-            style={{
-              padding: "4px",
-            }}
-          >
-            Total Win: {storedTotalWin > 0 ? storedTotalWin : 0}
-          </h3>
+          )}
         </div>
       </div>
 

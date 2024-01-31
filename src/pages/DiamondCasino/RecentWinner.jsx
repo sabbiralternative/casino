@@ -9,13 +9,13 @@ const RecentWinner = ({ data }) => {
                 <div
                   key={i}
                   className={`fSaeCExJe5Hg1sSPIiTA   
-                   ${winner === "L" ? "resultRed" : ""}
-                   ${winner === "H" ? "resultGreen" : ""}
-                   ${winner === "7" ? "resultYellow" : ""}
+                   ${winner?.charAt(0) === "L" ? "resultRed" : ""}
+                   ${winner?.charAt(0) === "H" ? "resultGreen" : ""}
+                   ${winner?.charAt(0) === "7" ? "resultYellow" : ""}
                    
                    `}
                 >
-                  <span>{winner}</span>
+                  <span>{winner?.charAt(0)}</span>
                 </div>
               );
             })}

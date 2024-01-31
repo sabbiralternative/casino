@@ -1,35 +1,29 @@
+import getClassName from "../../../hooks/getClassName";
+
 const AmarAkbarAnthony = ({
   data,
   clickedRunners,
   handlePlaceBet,
   WinnerRunner,
   timer,
+  placeBetBorder,
 }) => {
-
   return (
     <>
       <div className="ufCz6c1IqcZ7Cx4Or7Pi " style={{ height: "3.4em" }}>
-        {data[0]?.runners?.map((runner, i) => {
-          const isRunnerClicked = clickedRunners.includes(runner.id);
+        {data[0]?.runners?.map((runner, ) => {
           return (
             <div
               onClick={() => handlePlaceBet(data[0], runner)}
               key={runner?.id}
-              className={`QIGYZANQUJzivDLQDHjm ${
-                isRunnerClicked && data[0]?.status === "OPEN"
-                  ? "border-green-color"
-                  : ""
-              } 
-                            ${
-                              WinnerRunner[`${runner?.id}-${i}`]
-                                ? "border-green-color"
-                                : ""
-                            } 
-                            ${
-                              data[0]?.status === "OPEN" && timer > 0
-                                ? ""
-                                : "disabled"
-                            } `}
+              className={`QIGYZANQUJzivDLQDHjm ${getClassName(
+                clickedRunners,
+                runner,
+                data[0],
+                WinnerRunner,
+                placeBetBorder,
+                timer
+              )} `}
               style={{ width: "6.8em" }}
               data-combination="3"
               data-testid=""
@@ -51,25 +45,28 @@ const AmarAkbarAnthony = ({
 
       <div className="ufCz6c1IqcZ7Cx4Or7Pi " style={{ height: "5.8em" }}>
         {data?.slice(1, 4)?.map((games) =>
-          games?.runners?.map((runner, i) => {
-            const isRunnerClicked = clickedRunners.includes(runner.id);
+          games?.runners?.map((runner) => {
             return (
               <div
                 onClick={() => {
                   handlePlaceBet(games, runner);
                 }}
                 key={runner?.id}
-                className={`${
-                  isRunnerClicked && data[0]?.status === "OPEN"
-                    ? "border-green-color"
-                    : ""
-                } QIGYZANQUJzivDLQDHjm ${
+                className={` QIGYZANQUJzivDLQDHjm ${
                   runner?.name === "Red" ? "Jd_FQ2o2GATSrBeLJ2Rw" : ""
-                } ${
-                  data[0]?.status === "OPEN" && timer > 0 ? "" : "disabled"
-                }  ${
-                  WinnerRunner[`${runner?.id}-${i}`] ? "border-green-color" : ""
-                } `}
+                }
+
+
+               
+                ${getClassName(
+                  clickedRunners,
+                  runner,
+                  data[0],
+                  WinnerRunner,
+                  placeBetBorder,
+                  timer
+                )}
+                `}
                 style={{
                   width: "6.8em",
                   height: "2.1875em",
@@ -101,21 +98,23 @@ const AmarAkbarAnthony = ({
           <span className="g4jdfxv4yJMhUCeEyYRD"></span>
         </div>
         <div className="HIZjOTeNz60Nkxq2F8yF">
-          {data[4]?.runners?.map((runner, i) => {
-            const isRunnerClicked = clickedRunners.includes(runner.id);
+          {data[4]?.runners?.map((runner) => {
             return (
               <div
                 onClick={() => handlePlaceBet(data[4], runner)}
                 key={runner?.id}
-                className={`eiFJV7HiEPLhZOWBIVL_ ${
-                  isRunnerClicked && data[0]?.status === "OPEN"
-                    ? "border-green-color"
-                    : ""
-                } ${
-                  data[0]?.status === "OPEN" && timer > 0 ? "" : "disabled"
-                }  ${
-                  WinnerRunner[`${runner?.id}-${i}`] ? "border-green-color" : ""
-                } `}
+                className={`eiFJV7HiEPLhZOWBIVL_ 
+                
+                ${getClassName(
+                  clickedRunners,
+                  runner,
+                  data[0],
+                  WinnerRunner,
+                  placeBetBorder,
+                  timer
+                )}
+             
+                `}
                 data-combination="09"
                 style={{ width: "7.2%" }}
               >
