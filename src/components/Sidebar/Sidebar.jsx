@@ -11,6 +11,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
   });
   const navigate = useNavigate();
   const saveGameDetails = (games) => {
+    
     setSidebar(false);
     navigate(`/${games?.eventId}`);
   };

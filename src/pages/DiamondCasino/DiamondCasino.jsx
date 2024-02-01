@@ -31,14 +31,17 @@ const DiamondCasino = () => {
   const [showRecentWinner, setShowRecentWinner] = useState(true);
   const [placeBetBorder, setPlaceBetBorder] = useState({});
   const { toggleFullScreen } = useFullScreenToggle();
-
+  const showLastWin = localStorage.getItem("showLastWinner");
+  /* Hide the banner */
   useEffect(() => {
     const isTapToPlay = sessionStorage.getItem("isTapToPlay");
     if (!isTapToPlay) {
       setShowTapToPlay(true);
     }
-  }, []);
+    localStorage.removeItem("showLastWinner")
+  }, [eventId]);
 
+  /* Calculate the balance */
   useEffect(() => {
     if (storedTotalWin > 0) {
       const balance = JSON.parse(localStorage.getItem("balance"));
@@ -47,14 +50,15 @@ const DiamondCasino = () => {
     }
   }, [storedTotalWin]);
 
+  /* Successfully total bet sum */
   useEffect(() => {
     if (oddsData?.length > 0) {
       const getTotalPlaceOrder = JSON.parse(
         localStorage.getItem("totalBetPlace")
       );
-      if (!getTotalPlaceOrder) {
-        localStorage.removeItem("totalWin");
-      }
+      // if (!getTotalPlaceOrder) {
+      //   localStorage.removeItem("totalWin");
+      // }
       const filterOrderByEventId = getTotalPlaceOrder?.filter(
         (order) => order?.eventId === oddsData[0]?.eventId
       );
@@ -64,13 +68,69 @@ const DiamondCasino = () => {
 
   useEffect(() => {
     if (oddsData?.length > 0) {
-      const roundId = localStorage.getItem("roundId");
-      if (roundId != oddsData[0]?.roundId) {
-        localStorage.removeItem("totalBetPlace");
+      /* Get round-event-id from local Storage */
+      const storedRoundEventId = localStorage.getItem("roundEventId");
+      let existingRoundEventId = [];
+      if (storedRoundEventId) {
+        existingRoundEventId = JSON.parse(storedRoundEventId);
       }
-      localStorage.setItem("roundId", oddsData[0]?.roundId);
+      /* Get round-event-id from local Storage */
+
+      /* Find current event-round-Id from localeStorage */
+      const filterStoredRoundEvent = existingRoundEventId?.find(
+        (item) => item?.eventId === oddsData[0]?.eventId
+      );
+      /* Find current event-round-Id from localeStorage */
+
+      /* Get total bet from locale Storage */
+      let parseTotalPlaceBet;
+      const totalPlaceBet = localStorage.getItem("totalBetPlace");
+      if (totalPlaceBet) {
+        parseTotalPlaceBet = JSON.parse(totalPlaceBet);
+      }
+      /* Get total bet from locale Storage */
+
+      console.log(filterStoredRoundEvent?.roundId, oddsData[0]?.roundId);
+      /* Remove placed bet if roundId change */
+      if (filterStoredRoundEvent?.roundId !== oddsData[0]?.roundId) {
+        const filterTotalPlaceBet = parseTotalPlaceBet?.filter(
+          (item) => item.eventId !== oddsData[0]?.eventId
+        );
+        localStorage.setItem(
+          "totalBetPlace",
+          JSON.stringify(filterTotalPlaceBet)
+        );
+      }
+      /* Remove placed bet if roundId change */
+
+      /* Create round-event-id */
+      const roundEventId = {
+        eventId: oddsData[0]?.eventId,
+        roundId: oddsData[0]?.roundId,
+      };
+      /* Create round-event-id */
+
+      /* Remove duplicate event-round-id */
+      const isEventIdAlreadyStored = existingRoundEventId.some(
+        (existingEvent) => existingEvent.eventId === roundEventId.eventId
+      );
+
+      if (isEventIdAlreadyStored) {
+        existingRoundEventId = existingRoundEventId.filter(
+          (existingEvent) => existingEvent.eventId !== roundEventId.eventId
+        );
+      }
+      /* Remove duplicate event-round-id */
+
+      /* Set round-event-id */
+      existingRoundEventId.push(roundEventId);
+      localStorage.setItem(
+        "roundEventId",
+        JSON.stringify(existingRoundEventId)
+      );
+      /* Set round-event-id */
     }
-  }, [oddsData]);
+  }, [oddsData?.[0]?.roundId]);
 
   let totalOrderPlaced = 0;
   if (totalPlaceOrder) {
@@ -101,6 +161,7 @@ const DiamondCasino = () => {
     return () => clearInterval(intervalId);
   }, [setOddsData, token, eventId]);
 
+  /* Handle place bet */
   const handlePlaceBet = (game, runner) => {
     setShowRecentWinner(false);
     setShowPlaceBet(true);
@@ -136,6 +197,7 @@ const DiamondCasino = () => {
     });
   };
 
+  /* Price */
   useEffect(() => {
     setPrice(placeBetValue?.price);
   }, [placeBetValue]);
@@ -154,13 +216,11 @@ const DiamondCasino = () => {
         setTimer((prevCount) => prevCount - 1);
       }, 1000);
       return () => clearInterval(interval);
-    } else if (timer > 1) {
-      setShowPlaceBet(false);
-      setShowRecentWinner(true);
     }
   }, [roundIdForTimer]);
   /* Timer end */
 
+  /* Remove border color */
   const isBorderActiveStatus = oddsData[0]?.status;
   useEffect(() => {
     if (isBorderActiveStatus === "SUSPENDED" || timer < 1) {
@@ -187,10 +247,12 @@ const DiamondCasino = () => {
     });
   }, [oddsData, timer]);
 
+  /* Total win and set red border color */
   useEffect(() => {
     const placedBetBorder = {};
     let totalWin = 0;
     setPlaceBetBorder({});
+
     if (totalPlaceOrder && totalPlaceOrder?.length > 0) {
       totalPlaceOrder?.forEach((singleOrder) => {
         placedBetBorder[`${singleOrder?.id}-${singleOrder?.name}`] = true;
@@ -200,7 +262,9 @@ const DiamondCasino = () => {
     if (totalPlaceOrder && totalPlaceOrder.length > 0) {
       oddsData?.forEach((games) => {
         games?.runners?.forEach((runner) => {
+        
           if (runner?.status === "WINNER") {
+            localStorage.setItem("showLastWinner",'true');
             setPlaceBetBorder({});
             const winnerFilter = totalPlaceOrder?.filter(
               (order) => order?.id === runner?.id && runner?.status === "WINNER"
@@ -225,10 +289,12 @@ const DiamondCasino = () => {
             }
 
             totalWin += looserSum + WinnerSum;
+            console.log({ looserSum }, { WinnerSum });
+            localStorage.setItem("totalWin", totalWin.toString());
           }
         });
       });
-      localStorage.setItem("totalWin", totalWin.toString());
+      // localStorage.setItem("totalWin", totalWin.toString());
     } else {
       const storedTotalWin = localStorage.getItem("totalWin");
       if (storedTotalWin) {
@@ -236,6 +302,14 @@ const DiamondCasino = () => {
       }
     }
   }, [oddsData, totalPlaceOrder]);
+
+  /* hide show place bet and show recent winner */
+  useEffect(() => {
+    if (timer === 0) {
+      setShowPlaceBet(false);
+      setShowRecentWinner(true);
+    }
+  }, [timer]);
   // console.log(eventId);
   // console.log(oddsData);
   // console.log(oddsData);
@@ -377,8 +451,8 @@ const DiamondCasino = () => {
           >
             {timer > 0 ? timer : 0}
           </h3>
-       
-          {storedTotalWin > 0 ? (
+
+          {showLastWin && (
             <h3
               style={{
                 padding: "4px",
@@ -386,7 +460,8 @@ const DiamondCasino = () => {
             >
               Last Win: {storedTotalWin}
             </h3>
-          ):(
+          )}
+        {!showLastWin && (
             <h3
             style={{
               padding: "4px",
@@ -394,7 +469,7 @@ const DiamondCasino = () => {
           >
             Total Bet: {totalOrderPlaced}
           </h3>
-          )}
+        )}
         </div>
       </div>
 
