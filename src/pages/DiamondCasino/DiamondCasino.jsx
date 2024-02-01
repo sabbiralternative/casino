@@ -38,7 +38,7 @@ const DiamondCasino = () => {
     if (!isTapToPlay) {
       setShowTapToPlay(true);
     }
-    localStorage.removeItem("showLastWinner")
+    localStorage.removeItem("showLastWinner");
   }, [eventId]);
 
   /* Calculate the balance */
@@ -53,16 +53,14 @@ const DiamondCasino = () => {
   /* Successfully total bet sum */
   useEffect(() => {
     if (oddsData?.length > 0) {
-      const getTotalPlaceOrder = JSON.parse(
-        localStorage.getItem("totalBetPlace")
-      );
-      // if (!getTotalPlaceOrder) {
-      //   localStorage.removeItem("totalWin");
-      // }
-      const filterOrderByEventId = getTotalPlaceOrder?.filter(
-        (order) => order?.eventId === oddsData[0]?.eventId
-      );
-      setTotalPlaceOrder(filterOrderByEventId);
+      let getTotalPlaceOrder = localStorage.getItem("totalBetPlace");
+      if (getTotalPlaceOrder && getTotalPlaceOrder !== "undefined") {
+        getTotalPlaceOrder = JSON.parse(getTotalPlaceOrder);
+        const filterOrderByEventId = getTotalPlaceOrder?.filter(
+          (order) => order?.eventId === oddsData[0]?.eventId
+        );
+        setTotalPlaceOrder(filterOrderByEventId);
+      }
     }
   }, [oddsData]);
 
@@ -85,12 +83,11 @@ const DiamondCasino = () => {
       /* Get total bet from locale Storage */
       let parseTotalPlaceBet;
       const totalPlaceBet = localStorage.getItem("totalBetPlace");
-      if (totalPlaceBet) {
+      if (totalPlaceBet && totalPlaceBet !== "undefined") {
         parseTotalPlaceBet = JSON.parse(totalPlaceBet);
       }
       /* Get total bet from locale Storage */
 
-      console.log(filterStoredRoundEvent?.roundId, oddsData[0]?.roundId);
       /* Remove placed bet if roundId change */
       if (filterStoredRoundEvent?.roundId !== oddsData[0]?.roundId) {
         const filterTotalPlaceBet = parseTotalPlaceBet?.filter(
@@ -124,10 +121,12 @@ const DiamondCasino = () => {
 
       /* Set round-event-id */
       existingRoundEventId.push(roundEventId);
-      localStorage.setItem(
-        "roundEventId",
-        JSON.stringify(existingRoundEventId)
-      );
+      if (existingRoundEventId) {
+        localStorage.setItem(
+          "roundEventId",
+          JSON.stringify(existingRoundEventId)
+        );
+      }
       /* Set round-event-id */
     }
   }, [oddsData?.[0]?.roundId]);
@@ -150,7 +149,7 @@ const DiamondCasino = () => {
         },
       });
       const data = res.data;
-      // console.log(data);
+
       if (data.success) {
         setLoading(false);
         setOddsData(data.result);
@@ -262,9 +261,8 @@ const DiamondCasino = () => {
     if (totalPlaceOrder && totalPlaceOrder.length > 0) {
       oddsData?.forEach((games) => {
         games?.runners?.forEach((runner) => {
-        
           if (runner?.status === "WINNER") {
-            localStorage.setItem("showLastWinner",'true');
+            localStorage.setItem("showLastWinner", "true");
             setPlaceBetBorder({});
             const winnerFilter = totalPlaceOrder?.filter(
               (order) => order?.id === runner?.id && runner?.status === "WINNER"
@@ -289,7 +287,7 @@ const DiamondCasino = () => {
             }
 
             totalWin += looserSum + WinnerSum;
-            console.log({ looserSum }, { WinnerSum });
+
             localStorage.setItem("totalWin", totalWin.toString());
           }
         });
@@ -310,9 +308,50 @@ const DiamondCasino = () => {
       setShowRecentWinner(true);
     }
   }, [timer]);
-  // console.log(eventId);
-  // console.log(oddsData);
-  // console.log(oddsData);
+
+  let parseTotalPlaceBet;
+
+  const totalPlaceBet = localStorage.getItem("totalBetPlace");
+
+  if (totalPlaceBet && totalPlaceBet !== "undefined") {
+    try {
+      parseTotalPlaceBet = JSON.parse(totalPlaceBet);
+      parseTotalPlaceBet = parseTotalPlaceBet?.filter(
+        (placedBet) => placedBet?.eventId === oddsData[0]?.eventId
+      );
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      // Handle the error, such as setting parseTotalPlaceBet to a default value
+      // or displaying a message to the user.
+    }
+  }
+
+  const [timerValue, setTimerValue] = useState("");
+  const [newTimerValue, setNewTimerValue] = useState("");
+  useEffect(() => {
+    let calculatedTimerValue = "";
+    if (timer > 5) {
+      calculatedTimerValue = `PLACE YOUR BETS ${timer}`;
+    } else if (timer <= 5 && timer > 0) {
+      calculatedTimerValue = `BETS CLOSING ${timer}`;
+    } else if (timer < 1) {
+      calculatedTimerValue = `BETS CLOSED`;
+      if (timerValue === "BETS CLOSED") {
+        setTimerValue(calculatedTimerValue);
+        setTimeout(() => {
+          if (parseTotalPlaceBet?.length > 0) {
+            setNewTimerValue("BETS ACCEPTED");
+          } else {
+            setNewTimerValue("WAIT FOR NEXT GAME");
+          }
+        }, 3000);
+
+        return;
+      }
+    }
+    setTimerValue(calculatedTimerValue);
+    setNewTimerValue(calculatedTimerValue);
+  }, [timer, timerValue, parseTotalPlaceBet]);
 
   if (loading) {
     return <Loader />;
@@ -377,6 +416,15 @@ const DiamondCasino = () => {
                     backgroundColor: "transparent",
                   }}
                 ></div>
+              </div>
+              <div
+                className={`HV96yYgACaO7yk_UDHSY  marginBottom ${
+                  timer > 0 ? "textBlink" : ""
+                } `}
+              >
+                <div className={`${timer > 0 ? "openText" : "suspendedText"}`}>
+                  {newTimerValue}
+                </div>
               </div>
               {(eventId == "10004" || eventId == "10005") &&
               oddsData?.length > 0 ? (
@@ -444,14 +492,6 @@ const DiamondCasino = () => {
               />
             </div>
           )}
-          <h3
-            style={{
-              padding: "4px",
-            }}
-          >
-            {timer > 0 ? timer : 0}
-          </h3>
-
           {showLastWin && (
             <h3
               style={{
@@ -461,15 +501,15 @@ const DiamondCasino = () => {
               Last Win: {storedTotalWin}
             </h3>
           )}
-        {!showLastWin && (
+          {!showLastWin && (
             <h3
-            style={{
-              padding: "4px",
-            }}
-          >
-            Total Bet: {totalOrderPlaced}
-          </h3>
-        )}
+              style={{
+                padding: "4px",
+              }}
+            >
+              Total Bet: {totalOrderPlaced}
+            </h3>
+          )}
         </div>
       </div>
 

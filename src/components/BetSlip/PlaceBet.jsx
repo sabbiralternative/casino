@@ -27,7 +27,7 @@ const PlaceBet = ({
   // console.log(data);
   const handleOrderBets = () => {
     const placedBet = localStorage.getItem("totalBetPlace");
-    if (placedBet) {
+    if (placedBet && placedBet !== 'undefined') {
       const parsedPlacedBet = JSON.parse(placedBet);
       const isExistPlaceBet = parsedPlacedBet.find((bet) =>
         marketId.some(
@@ -76,7 +76,7 @@ const PlaceBet = ({
           setShowPlaceBet(false)
           const totalBetPlace = localStorage.getItem("totalBetPlace");
           let existingData = [];
-          if (totalBetPlace) {
+          if (totalBetPlace && totalBetPlace !== 'undefined') {
             existingData = JSON.parse(totalBetPlace);
           }
           const newBetPlace = {
