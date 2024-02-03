@@ -365,6 +365,7 @@ const DiamondCasino = () => {
   if (loading) {
     return <Loader />;
   }
+  // console.log(oddsData);
 
   return (
     <>
@@ -480,7 +481,10 @@ const DiamondCasino = () => {
                 />
               )}
               {showRecentWinner || timer < 1 ? (
-                <RecentWinner data={oddsData} />
+                <RecentWinner
+                 data={oddsData} 
+                 eventId={eventId}
+                 />
               ) : null}
             </div>
           </div>
