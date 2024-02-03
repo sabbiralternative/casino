@@ -208,15 +208,19 @@ const DiamondCasino = () => {
     const roundStart = oddsData[0]?.roundStart;
     const counter = oddsData[0]?.counter;
     const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-    const timer = counter - (currentTimestamp - roundStart);
-    setTimer(timer);
+    const timers = counter - (currentTimestamp - roundStart);
+   
+    setTimer(timers);
+  
     if (timer > 0) {
+    
       const interval = setInterval(() => {
         setTimer((prevCount) => prevCount - 1);
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [roundIdForTimer]);
+  }, [roundIdForTimer,timer]);
+  // console.log(timer);
   /* Timer end */
 
   /* Remove border color */
@@ -332,6 +336,8 @@ const DiamondCasino = () => {
     let calculatedTimerValue = "";
     if (timer > 5) {
       calculatedTimerValue = `PLACE YOUR BETS ${timer}`;
+      setNewTimerValue(calculatedTimerValue);
+      setTimerValue(calculatedTimerValue);
     } else if (timer <= 5 && timer > 0) {
       calculatedTimerValue = `BETS CLOSING ${timer}`;
     } else if (timer < 1) {
@@ -349,9 +355,12 @@ const DiamondCasino = () => {
         return;
       }
     }
+
     setTimerValue(calculatedTimerValue);
     setNewTimerValue(calculatedTimerValue);
   }, [timer, timerValue, parseTotalPlaceBet]);
+
+
 
   if (loading) {
     return <Loader />;
