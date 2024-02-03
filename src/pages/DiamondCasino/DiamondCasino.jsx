@@ -13,6 +13,8 @@ import Loader from "../../components/Loader/Loader";
 import RecentWinner from "./RecentWinner";
 import useFullScreenToggle from "../../hooks/useFullScreenToggle";
 import DragonTigerLion from "./GameType/DragonTigerLion";
+import DTL from "./GameType/DTL";
+import Baccarat from "./GameType/Baccarat";
 
 const DiamondCasino = () => {
   const { eventId } = useParams();
@@ -365,7 +367,7 @@ const DiamondCasino = () => {
   if (loading) {
     return <Loader />;
   }
-  // console.log(oddsData);
+  console.log(oddsData);
 
   return (
     <>
@@ -436,6 +438,28 @@ const DiamondCasino = () => {
                   {newTimerValue}
                 </div>
               </div>
+              {eventId == "10010" &&
+              oddsData?.length > 0 ? (
+                <DTL
+                  WinnerRunner={WinnerRunner}
+                  clickedRunners={clickedRunners}
+                  data={oddsData}
+                  handlePlaceBet={handlePlaceBet}
+                  timer={timer}
+                  placeBetBorder={placeBetBorder}
+                />
+              ) : null}
+               {eventId == "10024" &&
+              oddsData?.length > 0 ? (
+                <Baccarat
+                  WinnerRunner={WinnerRunner}
+                  clickedRunners={clickedRunners}
+                  data={oddsData}
+                  handlePlaceBet={handlePlaceBet}
+                  timer={timer}
+                  placeBetBorder={placeBetBorder}
+                />
+              ) : null}
               {(eventId == "10004" || eventId == "10005") &&
               oddsData?.length > 0 ? (
                 <AmarAkbarAnthony

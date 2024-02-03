@@ -8,7 +8,7 @@ const LuckySeven = ({
   timer,
   placeBetBorder,
 }) => {
-  const words = ["A-2-3", "4-5-6", "7-8-9", "J-Q-K"];
+  const words = ["A-2-3", "4-5-6", "8-9-T", "J-Q-K"];
   return (
     <>
       <div className="ufCz6c1IqcZ7Cx4Or7Pi" style={{ height: "3.3em" }}>
@@ -174,7 +174,7 @@ const LuckySeven = ({
           <span className="g4jdfxv4yJMhUCeEyYRD"></span>
         </div>
         <div className="HIZjOTeNz60Nkxq2F8yF">
-          {data[4]?.runners?.map((runner) => {
+          {data[4]?.runners?.map((runner, i) => {
             return (
               <div
                 onClick={() => handlePlaceBet(data[4], runner)}
@@ -192,7 +192,9 @@ const LuckySeven = ({
                 data-combination="09"
                 style={{ width: "7.2%" }}
               >
-                <span className="phht8116FLncA8Oh2SMh">{runner?.name}</span>
+                <span className="phht8116FLncA8Oh2SMh">
+                  {i === 9 ? "T" : runner?.name}
+                </span>
               </div>
             );
           })}

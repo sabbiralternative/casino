@@ -45,7 +45,13 @@ const DragonTigerLion = ({
 
       <div className="TbDJtMH0Lesra_HZpmsu">
         <span className="PzV26OxN2WKtuj8Y9FHR"></span>
-        <span className="dZ2gRLY67cqVBgNjZAFl">Dragon</span>
+        <span
+          className={`dZ2gRLY67cqVBgNjZAFl
+         ${data[0]?.status === "OPEN" && timer > 0 ? "" : "disabled"}
+        `}
+        >
+          Dragon
+        </span>
         <span className="g4jdfxv4yJMhUCeEyYRD"></span>
       </div>
 
@@ -111,7 +117,13 @@ const DragonTigerLion = ({
 
       <div className="TbDJtMH0Lesra_HZpmsu">
         <span className="PzV26OxN2WKtuj8Y9FHR"></span>
-        <span className="dZ2gRLY67cqVBgNjZAFl">Tiger</span>
+        <span
+          className={`dZ2gRLY67cqVBgNjZAFl
+         ${data[0]?.status === "OPEN" && timer > 0 ? "" : "disabled"}
+        `}
+        >
+          Tiger
+        </span>
         <span className="g4jdfxv4yJMhUCeEyYRD"></span>
       </div>
 
