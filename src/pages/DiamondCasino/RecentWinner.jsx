@@ -1,7 +1,7 @@
 import getAlphabetClassName from "../../hooks/getAlphabetClassName";
 
 const RecentWinner = ({ data, eventId }) => {
-  console.log(eventId);
+  // console.log(eventId);
 
   return (
     <div className="HV96yYgACaO7yk_UDHSY">

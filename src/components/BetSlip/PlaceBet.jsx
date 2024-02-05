@@ -70,6 +70,7 @@ const PlaceBet = ({
       .then((data) => {
         console.log(data);
         if (data?.success) {
+          sessionStorage.removeItem('tokenExpire')
           localStorage.removeItem("totalWin");
           localStorage.removeItem('showLastWinner')
           setShowRecentWinner(true)

@@ -15,6 +15,7 @@ import useFullScreenToggle from "../../hooks/useFullScreenToggle";
 import DragonTigerLion from "./GameType/DragonTigerLion";
 import DTL from "./GameType/DTL";
 import Baccarat from "./GameType/Baccarat";
+import SessionExpire from "../../components/SessionExpire/SessionExpire";
 
 const DiamondCasino = () => {
   const { eventId } = useParams();
@@ -211,17 +212,16 @@ const DiamondCasino = () => {
     const counter = oddsData[0]?.counter;
     const currentTimestamp = Math.floor(new Date().getTime() / 1000);
     const timers = counter - (currentTimestamp - roundStart);
-   
+
     setTimer(timers);
-  
+
     if (timer > 0) {
-    
       const interval = setInterval(() => {
         setTimer((prevCount) => prevCount - 1);
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [roundIdForTimer,timer]);
+  }, [roundIdForTimer, timer]);
   // console.log(timer);
   /* Timer end */
 
@@ -362,12 +362,34 @@ const DiamondCasino = () => {
     setNewTimerValue(calculatedTimerValue);
   }, [timer, timerValue, parseTotalPlaceBet]);
 
+  const [tokenExpireMessage, setTokenExpireMessage] = useState(false);
+  useEffect(() => {
+    if (token) {
+      const setTimer = () => {
+        const tokenExpire = sessionStorage.getItem("tokenExpire");
+        if (tokenExpire) {
+          const parseTokenExpire = parseFloat(tokenExpire);
+          if (parseTokenExpire === 300) {
+            localStorage.removeItem("token");
+            setTokenExpireMessage(true);
+          }
+          const newNumber = parseTokenExpire + 1;
+          sessionStorage.setItem("tokenExpire", newNumber);
+        } else {
+          sessionStorage.setItem("tokenExpire", 1);
+        }
+      };
+      const intervalId = setInterval(setTimer, 1000);
+      return () => clearInterval(intervalId);
+    }
+  }, [token]);
 
+// console.log(oddsData);
 
   if (loading) {
     return <Loader />;
   }
-  console.log(oddsData);
+  // console.log(oddsData);
 
   return (
     <>
@@ -438,8 +460,7 @@ const DiamondCasino = () => {
                   {newTimerValue}
                 </div>
               </div>
-              {eventId == "10010" &&
-              oddsData?.length > 0 ? (
+              {eventId == "10010" && oddsData?.length > 0 ? (
                 <DTL
                   WinnerRunner={WinnerRunner}
                   clickedRunners={clickedRunners}
@@ -449,8 +470,7 @@ const DiamondCasino = () => {
                   placeBetBorder={placeBetBorder}
                 />
               ) : null}
-               {eventId == "10024" &&
-              oddsData?.length > 0 ? (
+              {eventId == "10024" && oddsData?.length > 0 ? (
                 <Baccarat
                   WinnerRunner={WinnerRunner}
                   clickedRunners={clickedRunners}
@@ -505,10 +525,7 @@ const DiamondCasino = () => {
                 />
               )}
               {showRecentWinner || timer < 1 ? (
-                <RecentWinner
-                 data={oddsData} 
-                 eventId={eventId}
-                 />
+                <RecentWinner data={oddsData} eventId={eventId} />
               ) : null}
             </div>
           </div>
@@ -559,6 +576,7 @@ const DiamondCasino = () => {
           setIsOpenBetEdit={setIsOpenBetEdit}
         />
       )}
+      {tokenExpireMessage && <SessionExpire />}
       <div className="sc-fmzyuX bxpLFZ">
         <div className="sc-cspYLC beuanj"></div>
       </div>

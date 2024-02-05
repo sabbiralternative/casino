@@ -2881,5 +2881,25 @@ img {
 .textBlink{animation:statusBlink 1.5s steps(12) infinite;}
 @keyframes statusBlink{0%,to{opacity:1;}50%{opacity:.6;}}
 
+.popup--11329{flex-direction:column;font-size:1rem;pointer-events:all;-webkit-user-select:none;-moz-user-select:none;user-select:none;}
+.contentWrapper--2f576{display:inline-flex;flex-direction:column;position:relative;}
+.titleContainer--fe91d{flex-grow:0;flex-shrink:0;text-align:center; font-family: "RubikRegular"}
+.content--c7c5e{color:#fff;flex-grow:1;flex-shrink:1;font-weight:400;line-height:normal;text-align:center;}
+.themeDefault--c94f5{background-color:rgba(26,26,26,.97);border:1px solid rgba(150,255,255,.97);border-radius:.667em;box-sizing:border-box;display:inline-flex;max-width:60em;min-width:48em;padding:3em 5.917em 0;-webkit-user-select:none;-moz-user-select:none;user-select:none;}
+.themeDefault--c94f5 .titleContainer--fe91d{color:#96ffff;font-size:1.667em;font-weight:500;line-height:1.5em;margin-bottom:1.2em;}
+.themeDefault--c94f5 .content--c7c5e{font-size:1.667em;margin-bottom:1.85em;}
+
+.contentWrapper--b308f{-ms-overflow-style:-ms-autohiding-scrollbar;box-sizing:border-box;height:100%;margin-right:-2rem;-webkit-mask-position:100% 100%;mask-position:100% 100%;-webkit-mask-size:100% 100%;mask-size:100% 100%;overflow-x:hidden;overflow-y:auto;padding-right:2rem;scrollbar-width:none;width:calc(100% + 2rem);}
+.contentWrapper--b308f::-webkit-scrollbar{display:none;}
+.contentElement--e8ecb{position:relative;width:calc(100% - 2rem);}
+
+
+
+.thumb--ce702{background-color:hsla(0,0%,100%,.3);border-radius:.25rem;height:8.5rem;position:absolute;transition:background-color .15s ease-in;width:.5rem;}
+.thumbHidden--7b9c1 .thumb--ce702{display:none;}
+.popupContainer--53f29{  align-items:center;background-color:initial;bottom:0;display:flex;height:100%;justify-content:center;left:0;pointer-events:none;position:absolute;right:0;top:0;width:100%;z-index:9993;}
+.popupContainer--53f29.highestPriority--6e829{z-index:9996;}
+.blocking--88949{background-color:rgba(26,26,26,.6);pointer-events:all;}
+.popup--3eb13{display:inline-block;}
 
 
