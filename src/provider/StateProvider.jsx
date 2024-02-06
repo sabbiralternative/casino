@@ -6,6 +6,7 @@ const StateProvider = ({ children }) => {
   const [oddsData, setOddsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState("");
+  const [tokenExpireMessage, setTokenExpireMessage] = useState(false);
   const [showTapToPlay, setShowTapToPlay] = useState(false);
   const baseUrl = window.location.origin;
   const currentUrl = window.location.href;
@@ -50,6 +51,7 @@ const StateProvider = ({ children }) => {
     setShowTapToPlay,
     loading,
     setLoading,
+    tokenExpireMessage, setTokenExpireMessage
   };
 
   return (

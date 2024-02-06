@@ -24,8 +24,15 @@ const DiamondCasino = () => {
   const [totalSize, setTotalSize] = useState("");
   const [isOpenBetEdit, setIsOpenBetEdit] = useState(false);
   const [clickedRunners, setClickedRunners] = useState([]);
-  const { token, oddsData, setOddsData, setShowTapToPlay, showTapToPlay } =
-    useContextState();
+  const {
+    token,
+    oddsData,
+    setOddsData,
+    setShowTapToPlay,
+    showTapToPlay,
+    tokenExpireMessage,
+    setTokenExpireMessage,
+  } = useContextState();
   const storedTotalWin = localStorage.getItem("totalWin");
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
   const { videoUrl } = useGetVideo();
@@ -362,14 +369,13 @@ const DiamondCasino = () => {
     setNewTimerValue(calculatedTimerValue);
   }, [timer, timerValue, parseTotalPlaceBet]);
 
-  const [tokenExpireMessage, setTokenExpireMessage] = useState(false);
   useEffect(() => {
     if (token) {
       const setTimer = () => {
         const tokenExpire = sessionStorage.getItem("tokenExpire");
         if (tokenExpire) {
           const parseTokenExpire = parseFloat(tokenExpire);
-          if (parseTokenExpire === 300) {
+          if (parseTokenExpire > 299) {
             localStorage.removeItem("token");
             setTokenExpireMessage(true);
           }
@@ -379,196 +385,204 @@ const DiamondCasino = () => {
           sessionStorage.setItem("tokenExpire", 1);
         }
       };
-      const intervalId = setInterval(setTimer, 1000);
+      const intervalId = setInterval( setTimer, 1000);
       return () => clearInterval(intervalId);
     }
-  }, [token]);
+  }, [token,setTokenExpireMessage]);
 
   // console.log(oddsData);
 
   if (loading) {
     return <Loader />;
-  } 
+  }
 
   return (
     <>
-      <div
-        onClick={toggleFullScreen}
-        className="css-1lkepkh e1bi9tuq11"
-        data-e2e="preloader"
-        style={{ color: "rgb(255, 255, 255)" }}
-      >
-        <div
-          className=" css-17pdoa6 e1bi9tuq0"
-          style={{
-            background: "rgb(0, 0, 0)",
-            transform: `translateY(${showTapToPlay ? "0" : "-1200"}px)`,
-          }}
-        >
+      {tokenExpireMessage || !token ? <SessionExpire /> : null}
+
+      {!tokenExpireMessage && (
+        <>
           <div
-            className="css-1te3lh6 e1bi9tuq9"
-            style={{
-              backgroundImage:
-                'url("https://conf.ezassets.io/CustomAssets/operator_background/newdragontiger150.jpg")',
-            }}
-          ></div>
+            onClick={toggleFullScreen}
+            className="css-1lkepkh e1bi9tuq11"
+            data-e2e="preloader"
+            style={{ color: "rgb(255, 255, 255)" }}
+          >
+            <div
+              className=" css-17pdoa6 e1bi9tuq0"
+              style={{
+                background: "rgb(0, 0, 0)",
+                transform: `translateY(${showTapToPlay ? "0" : "-1200"}px)`,
+              }}
+            >
+              <div
+                className="css-1te3lh6 e1bi9tuq9"
+                style={{
+                  backgroundImage:
+                    'url("https://conf.ezassets.io/CustomAssets/operator_background/newdragontiger150.jpg")',
+                }}
+              ></div>
 
-          <div className="css-17zrqdz e1bi9tuq2">
-            <span color="#ffffff" className="css-1fvtxkv e1bi9tuq10"></span>
-            <p className="css-4lpehb e1bi9tuq1">Tap to play</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="">
-        <div className="IZi6anh0l0XCig_RhoF_">
-          <div>
-            <div>
-              <div className={`bseTNUfpf1We9ygRGnGP `}>
-                <iframe
-                  allow="fullscreen;"
-                  allowFullScreen={true}
-                  src={videoUrl && videoUrl}
-                  style={{
-                    left: 0,
-                    top: 0,
-                    height: "100%",
-                    width: "100%",
-                    border: 0,
-                    overflowClipMargin: "clip !important",
-                    overflow: "clip !important",
-                  }}
-                ></iframe>
-                <div
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "transparent",
-                  }}
-                ></div>
+              <div className="css-17zrqdz e1bi9tuq2">
+                <span color="#ffffff" className="css-1fvtxkv e1bi9tuq10"></span>
+                <p className="css-4lpehb e1bi9tuq1">Tap to play</p>
               </div>
-              {oddsData?.length > 0 && (
-                <div
-                  className={`HV96yYgACaO7yk_UDHSY  marginBottom ${
-                    timer > 0 ? "textBlink" : ""
-                  } `}
-                >
-                  <div
-                    className={`${timer > 0 ? "openText" : "suspendedText"}`}
-                  >
-                    {newTimerValue}
+            </div>
+          </div>
+
+          <div className="">
+            <div className="IZi6anh0l0XCig_RhoF_">
+              <div>
+                <div>
+                  <div className={`bseTNUfpf1We9ygRGnGP `}>
+                    <iframe
+                      allow="fullscreen;"
+                      allowFullScreen={true}
+                      src={videoUrl && videoUrl}
+                      style={{
+                        left: 0,
+                        top: 0,
+                        height: "100%",
+                        width: "100%",
+                        border: 0,
+                        overflowClipMargin: "clip !important",
+                        overflow: "clip !important",
+                      }}
+                    ></iframe>
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        top: 0,
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "transparent",
+                      }}
+                    ></div>
                   </div>
+                  {oddsData?.length > 0 && (
+                    <div
+                      className={`HV96yYgACaO7yk_UDHSY  marginBottom ${
+                        timer > 0 ? "textBlink" : ""
+                      } `}
+                    >
+                      <div
+                        className={`${
+                          timer > 0 ? "openText" : "suspendedText"
+                        }`}
+                      >
+                        {newTimerValue}
+                      </div>
+                    </div>
+                  )}
+                  {eventId == "10010" && oddsData?.length > 0 ? (
+                    <DTL
+                      WinnerRunner={WinnerRunner}
+                      clickedRunners={clickedRunners}
+                      data={oddsData}
+                      handlePlaceBet={handlePlaceBet}
+                      timer={timer}
+                      placeBetBorder={placeBetBorder}
+                    />
+                  ) : null}
+                  {eventId == "10024" && oddsData?.length > 0 ? (
+                    <Baccarat
+                      WinnerRunner={WinnerRunner}
+                      clickedRunners={clickedRunners}
+                      data={oddsData}
+                      handlePlaceBet={handlePlaceBet}
+                      timer={timer}
+                      placeBetBorder={placeBetBorder}
+                    />
+                  ) : null}
+                  {(eventId == "10004" || eventId == "10005") &&
+                  oddsData?.length > 0 ? (
+                    <AmarAkbarAnthony
+                      WinnerRunner={WinnerRunner}
+                      clickedRunners={clickedRunners}
+                      data={oddsData}
+                      handlePlaceBet={handlePlaceBet}
+                      timer={timer}
+                      placeBetBorder={placeBetBorder}
+                    />
+                  ) : null}
+                  {eventId === "10006" && oddsData?.length > 0 ? (
+                    <BollywoodCasino
+                      WinnerRunner={WinnerRunner}
+                      clickedRunners={clickedRunners}
+                      data={oddsData}
+                      handlePlaceBet={handlePlaceBet}
+                      timer={timer}
+                      placeBetBorder={placeBetBorder}
+                    />
+                  ) : null}
+                  {(eventId === "10001" ||
+                    eventId === "10002" ||
+                    eventId === "10003") &&
+                    oddsData?.length > 0 && (
+                      <LuckySeven
+                        WinnerRunner={WinnerRunner}
+                        clickedRunners={clickedRunners}
+                        data={oddsData}
+                        handlePlaceBet={handlePlaceBet}
+                        timer={timer}
+                        placeBetBorder={placeBetBorder}
+                      />
+                    )}
+                  {eventId === "10007" && oddsData?.length > 0 && (
+                    <DragonTigerLion
+                      WinnerRunner={WinnerRunner}
+                      clickedRunners={clickedRunners}
+                      data={oddsData}
+                      handlePlaceBet={handlePlaceBet}
+                      timer={timer}
+                      placeBetBorder={placeBetBorder}
+                    />
+                  )}
+                  {(showRecentWinner || timer < 1) && oddsData?.length > 0 ? (
+                    <RecentWinner data={oddsData} eventId={eventId} />
+                  ) : null}
+                </div>
+              </div>
+              {showPlaceBet && timer > 0 && (
+                <div className="df2usAO24F5Qe9k7Y0dH" style={{ height: "8em" }}>
+                  <PlaceBet
+                    setShowRecentWinner={setShowRecentWinner}
+                    setShowPlaceBet={setShowPlaceBet}
+                    totalSize={totalSize}
+                    placeBetValue={placeBetValue}
+                    setTotalSize={setTotalSize}
+                    setIsOpenBetEdit={setIsOpenBetEdit}
+                    price={price}
+                    setClickedRunners={setClickedRunners}
+                    setPlaceBetValue={setPlaceBetValue}
+                    timer={timer}
+                    data={oddsData}
+                  />
                 </div>
               )}
-              {eventId == "10010" && oddsData?.length > 0 ? (
-                <DTL
-                  WinnerRunner={WinnerRunner}
-                  clickedRunners={clickedRunners}
-                  data={oddsData}
-                  handlePlaceBet={handlePlaceBet}
-                  timer={timer}
-                  placeBetBorder={placeBetBorder}
-                />
-              ) : null}
-              {eventId == "10024" && oddsData?.length > 0 ? (
-                <Baccarat
-                  WinnerRunner={WinnerRunner}
-                  clickedRunners={clickedRunners}
-                  data={oddsData}
-                  handlePlaceBet={handlePlaceBet}
-                  timer={timer}
-                  placeBetBorder={placeBetBorder}
-                />
-              ) : null}
-              {(eventId == "10004" || eventId == "10005") &&
-              oddsData?.length > 0 ? (
-                <AmarAkbarAnthony
-                  WinnerRunner={WinnerRunner}
-                  clickedRunners={clickedRunners}
-                  data={oddsData}
-                  handlePlaceBet={handlePlaceBet}
-                  timer={timer}
-                  placeBetBorder={placeBetBorder}
-                />
-              ) : null}
-              {eventId === "10006" && oddsData?.length > 0 ? (
-                <BollywoodCasino
-                  WinnerRunner={WinnerRunner}
-                  clickedRunners={clickedRunners}
-                  data={oddsData}
-                  handlePlaceBet={handlePlaceBet}
-                  timer={timer}
-                  placeBetBorder={placeBetBorder}
-                />
-              ) : null}
-              {(eventId === "10001" ||
-                eventId === "10002" ||
-                eventId === "10003") &&
-                oddsData?.length > 0 && (
-                  <LuckySeven
-                    WinnerRunner={WinnerRunner}
-                    clickedRunners={clickedRunners}
-                    data={oddsData}
-                    handlePlaceBet={handlePlaceBet}
-                    timer={timer}
-                    placeBetBorder={placeBetBorder}
-                  />
-                )}
-              {eventId === "10007" && oddsData?.length > 0 && (
-                <DragonTigerLion
-                  WinnerRunner={WinnerRunner}
-                  clickedRunners={clickedRunners}
-                  data={oddsData}
-                  handlePlaceBet={handlePlaceBet}
-                  timer={timer}
-                  placeBetBorder={placeBetBorder}
-                />
+              {showLastWin && oddsData?.length > 0 && (
+                <h3
+                  style={{
+                    padding: "4px",
+                  }}
+                >
+                  Last Win: {storedTotalWin}
+                </h3>
               )}
-              {(showRecentWinner || timer < 1) && oddsData?.length > 0 ? (
-                <RecentWinner data={oddsData} eventId={eventId} />
-              ) : null}
+              {!showLastWin && oddsData?.length > 0 && (
+                <h3
+                  style={{
+                    padding: "4px",
+                  }}
+                >
+                  Total Bet: {totalOrderPlaced}
+                </h3>
+              )}
             </div>
           </div>
-          {showPlaceBet && timer > 0 && (
-            <div className="df2usAO24F5Qe9k7Y0dH" style={{ height: "8em" }}>
-              <PlaceBet
-                setShowRecentWinner={setShowRecentWinner}
-                setShowPlaceBet={setShowPlaceBet}
-                totalSize={totalSize}
-                placeBetValue={placeBetValue}
-                setTotalSize={setTotalSize}
-                setIsOpenBetEdit={setIsOpenBetEdit}
-                price={price}
-                setClickedRunners={setClickedRunners}
-                setPlaceBetValue={setPlaceBetValue}
-                timer={timer}
-                data={oddsData}
-              />
-            </div>
-          )}
-          {showLastWin && oddsData?.length > 0 && (
-            <h3
-              style={{
-                padding: "4px",
-              }}
-            >
-              Last Win: {storedTotalWin}
-            </h3>
-          )}
-          {!showLastWin && oddsData?.length > 0 && (
-            <h3
-              style={{
-                padding: "4px",
-              }}
-            >
-              Total Bet: {totalOrderPlaced}
-            </h3>
-          )}
-        </div>
-      </div>
+        </>
+      )}
 
       {/* <!--  Bet slip buttons -->*/}
       {isOpenBetEdit && (
@@ -579,7 +593,7 @@ const DiamondCasino = () => {
           setIsOpenBetEdit={setIsOpenBetEdit}
         />
       )}
-      {tokenExpireMessage || !token ? <SessionExpire /> : null}
+
       <div className="sc-fmzyuX bxpLFZ">
         <div className="sc-cspYLC beuanj"></div>
       </div>

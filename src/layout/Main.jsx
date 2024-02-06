@@ -6,11 +6,12 @@ import useContextState from "../hooks/useContextState";
 import { Toaster } from "react-hot-toast";
 
 
+
 const Main = () => {
   const [fontSize, setFontSize] = useState("");
   const [sidebar, setSidebar] = useState(false);
   const [balance] = UseBalance();
-  const { oddsData, token,setOddsData } = useContextState();
+  const { oddsData, token,setOddsData,tokenExpireMessage } = useContextState();
   const [storedBalance, setStoredBalance] = useState(null);
 
   useEffect(() => {
@@ -41,7 +42,9 @@ const Main = () => {
               <div className="blurred">
                 <Sidebar sidebar={sidebar} setSidebar={setSidebar} />
               </div>
-              <div>
+            {
+              !tokenExpireMessage && (
+                <div>
                 <div className="sc-cPyLVi cyGWxV">
                   <div className="sc-eXAmlR kzOxAO">
                     <div className="sc-dovdUy hebIcs">
@@ -108,6 +111,8 @@ const Main = () => {
                   </div>
                 </div>
               </div>
+              )
+            }
 
               {/*      <!-- backdrop menu open --> */}
 

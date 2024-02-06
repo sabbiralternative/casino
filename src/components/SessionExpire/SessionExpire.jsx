@@ -4,7 +4,10 @@ const SessionExpire = () => {
       className="popupContainer--53f29 blocking--88949 highestPriority--6e829"
       data-role="popup-container"
     >
-      <div className="popup--3eb13">
+      <div className="popup--3eb13"
+      
+      
+      >
         <div
           className="popup--11329 themeDefault--c94f5 versionDesktop--e3f80"
           data-role="popup"
@@ -19,7 +22,7 @@ const SessionExpire = () => {
                   <div
                     className="contentWrapper--b308f"
                     data-role="contentWrapper"
-                    style={{position:'relative'}}
+                    style={{ position: "relative" }}
                   >
                     <div className="contentElement--e8ecb">
                       Your session has expired because you were inactive for too
@@ -28,7 +31,7 @@ const SessionExpire = () => {
                         className="erd_scroll_detection_container erd_scroll_detection_container_animation_active"
                         style={{
                           visibility: "hidden",
-                          display: "none",
+                          display: "inline",
                           width: "0px",
                           height: "0px",
                           zIndex: "-1",

@@ -1,20 +1,54 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import CloseModalClickOutside from "../../hooks/CloseModalClickOutside";
 import useDiamondCasinoName from "../../hooks/useDiamondCasinoName";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import useContextState from "../../hooks/useContextState";
 
 const Sidebar = ({ sidebar, setSidebar }) => {
+  const { eventId } = useParams();
   const { diamondCasinoNav } = useDiamondCasinoName();
   const leftMenuRef = useRef();
+  const { token } = useContextState();
+  const [rules, setRules] = useState(null);
   CloseModalClickOutside(leftMenuRef, () => {
     setSidebar(false);
   });
+
   const navigate = useNavigate();
   const saveGameDetails = (games) => {
-    
     setSidebar(false);
     navigate(`/${games?.eventId}`);
   };
+
+  const handleRules = async () => {
+    const res = await axios.get(
+      `https://api7.live/api/exchange/diamond/rules/event/1000/${eventId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const data = res.data;
+    if (data?.success) {
+      setRules(data?.result[0]?.rules);
+      setSidebar(false);
+    }
+  };
+
+
+  const handleClick = () => {
+   setRules([])
+  };
+
+  useEffect(() => {
+    const closeRules = document.getElementsByClassName("sc-knefzF xHVGW")[0];
+    if (closeRules) {
+      closeRules.addEventListener("click", handleClick);
+    }
+  }, [rules]);
+
   return (
     <div>
       <div
@@ -31,10 +65,11 @@ const Sidebar = ({ sidebar, setSidebar }) => {
           />
         </div>
         <div className="sc-cepbVR hgJfd">
-          <Link 
-          to='/'
-          onClick={() => setSidebar(false)}
-          className="sc-etKGGb bhWlty">
+          <Link
+            to="/"
+            onClick={() => setSidebar(false)}
+            className="sc-etKGGb bhWlty"
+          >
             <span className="sc-cDltVh kWWYqr">
               <svg
                 width="100%"
@@ -67,7 +102,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
             <span className="sc-einZSS gkiEbN">History</span>
           </div>
 
-          <div className="sc-etKGGb bhWlty">
+          <div onClick={handleRules} className="sc-etKGGb bhWlty">
             <span className="sc-cDltVh kWWYqr">
               <svg
                 width="100%"
@@ -120,6 +155,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
           </div>
         </div>
       </div>
+      {rules && <div dangerouslySetInnerHTML={{ __html: rules }} />}
     </div>
   );
 };
