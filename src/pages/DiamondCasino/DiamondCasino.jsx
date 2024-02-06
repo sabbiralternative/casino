@@ -384,12 +384,11 @@ const DiamondCasino = () => {
     }
   }, [token]);
 
-// console.log(oddsData);
+  // console.log(oddsData);
 
   if (loading) {
     return <Loader />;
-  }
-  // console.log(oddsData);
+  } 
 
   return (
     <>
@@ -451,15 +450,19 @@ const DiamondCasino = () => {
                   }}
                 ></div>
               </div>
-              <div
-                className={`HV96yYgACaO7yk_UDHSY  marginBottom ${
-                  timer > 0 ? "textBlink" : ""
-                } `}
-              >
-                <div className={`${timer > 0 ? "openText" : "suspendedText"}`}>
-                  {newTimerValue}
+              {oddsData?.length > 0 && (
+                <div
+                  className={`HV96yYgACaO7yk_UDHSY  marginBottom ${
+                    timer > 0 ? "textBlink" : ""
+                  } `}
+                >
+                  <div
+                    className={`${timer > 0 ? "openText" : "suspendedText"}`}
+                  >
+                    {newTimerValue}
+                  </div>
                 </div>
-              </div>
+              )}
               {eventId == "10010" && oddsData?.length > 0 ? (
                 <DTL
                   WinnerRunner={WinnerRunner}
@@ -524,7 +527,7 @@ const DiamondCasino = () => {
                   placeBetBorder={placeBetBorder}
                 />
               )}
-              {showRecentWinner || timer < 1 ? (
+              {(showRecentWinner || timer < 1) && oddsData?.length > 0 ? (
                 <RecentWinner data={oddsData} eventId={eventId} />
               ) : null}
             </div>
@@ -546,7 +549,7 @@ const DiamondCasino = () => {
               />
             </div>
           )}
-          {showLastWin && (
+          {showLastWin && oddsData?.length > 0 && (
             <h3
               style={{
                 padding: "4px",
@@ -555,7 +558,7 @@ const DiamondCasino = () => {
               Last Win: {storedTotalWin}
             </h3>
           )}
-          {!showLastWin && (
+          {!showLastWin && oddsData?.length > 0 && (
             <h3
               style={{
                 padding: "4px",
@@ -576,10 +579,17 @@ const DiamondCasino = () => {
           setIsOpenBetEdit={setIsOpenBetEdit}
         />
       )}
-      {tokenExpireMessage && <SessionExpire />}
+      {tokenExpireMessage || !token ? <SessionExpire /> : null}
       <div className="sc-fmzyuX bxpLFZ">
         <div className="sc-cspYLC beuanj"></div>
       </div>
+      {oddsData?.length < 1 && (
+        <div className="HV96yYgACaO7yk_UDHSY marginBottom">
+          <div className="openText">
+            This table is inactive, please try again later.
+          </div>
+        </div>
+      )}
     </>
   );
 };

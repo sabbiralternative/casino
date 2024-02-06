@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { createContext, useEffect, useState } from "react";
 
-
-
 export const StateContext = createContext(null);
 const StateProvider = ({ children }) => {
   const [oddsData, setOddsData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [token, setToken] = useState("");
   const [showTapToPlay, setShowTapToPlay] = useState(false);
   const baseUrl = window.location.origin;
   const currentUrl = window.location.href;
-
-
 
   /* path */
   useEffect(() => {
@@ -33,7 +30,6 @@ const StateProvider = ({ children }) => {
       const newUrl = baseUrl + (eventId?.length > 0 ? `/${eventId}` : "/");
 
       window.history.replaceState({}, document.title, newUrl);
- 
     }
   }, [baseUrl, currentUrl]);
 
@@ -42,19 +38,18 @@ const StateProvider = ({ children }) => {
     if (storedToken) {
       setToken(storedToken);
     }
+    setLoading(false);
   }, []);
-
-  if (!token) {
-    return;
-  }
 
   const stateInfo = {
     oddsData,
     setOddsData,
     token,
     setToken,
-    showTapToPlay, setShowTapToPlay
-
+    showTapToPlay,
+    setShowTapToPlay,
+    loading,
+    setLoading,
   };
 
   return (
