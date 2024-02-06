@@ -25,7 +25,8 @@ const getAlphabetClassName = (id, ct) => {
     ${id === "10024" && ct === "B" ? "resultRed" : ""}
     ${id === "10024" && ct === "T" ? "resultGreen" : ""}
     ${id === "10024" && ct === "P" ? "resultYellow" : ""}
-    
+    ${id === "10017" && ct === "A" ? "resultRed" : ""}
+    ${id === "10017" && ct === "B" ? "resultGreen" : ""}
     
     `;
 };

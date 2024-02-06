@@ -16,6 +16,7 @@ import DragonTigerLion from "./GameType/DragonTigerLion";
 import DTL from "./GameType/DTL";
 import Baccarat from "./GameType/Baccarat";
 import SessionExpire from "../../components/SessionExpire/SessionExpire";
+import TeenPatti2020 from "./GameType/TeenPatti2020";
 
 const DiamondCasino = () => {
   const { eventId } = useParams();
@@ -475,6 +476,16 @@ const DiamondCasino = () => {
                       </div>
                     </div>
                   )}
+                    {eventId == "10017" && oddsData?.length > 0 ? (
+                    <TeenPatti2020
+                      WinnerRunner={WinnerRunner}
+                      clickedRunners={clickedRunners}
+                      data={oddsData}
+                      handlePlaceBet={handlePlaceBet}
+                      timer={timer}
+                      placeBetBorder={placeBetBorder}
+                    />
+                  ) : null}
                   {eventId == "10010" && oddsData?.length > 0 ? (
                     <DTL
                       WinnerRunner={WinnerRunner}
