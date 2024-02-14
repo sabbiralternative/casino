@@ -17,6 +17,7 @@ import DTL from "./GameType/DTL";
 import Baccarat from "./GameType/Baccarat";
 import SessionExpire from "../../components/SessionExpire/SessionExpire";
 import TeenPatti2020 from "./GameType/TeenPatti2020";
+import confetti from "canvas-confetti";
 
 const DiamondCasino = () => {
   const { eventId } = useParams();
@@ -43,6 +44,7 @@ const DiamondCasino = () => {
   const [placeBetBorder, setPlaceBetBorder] = useState({});
   const { toggleFullScreen } = useFullScreenToggle();
   const showLastWin = localStorage.getItem("showLastWinner");
+  const showConfetti = localStorage.getItem("confetti");
   /* Hide the banner */
   useEffect(() => {
     const isTapToPlay = sessionStorage.getItem("isTapToPlay");
@@ -249,6 +251,14 @@ const DiamondCasino = () => {
     oddsData?.forEach((item) => {
       item?.runners?.forEach((runner) => {
         if (runner?.status === "WINNER") {
+          if (!showConfetti) {
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 },
+            });
+            localStorage.setItem("confetti", "false");
+          }
           newChangedPrices[`${runner?.id}-${runner?.name}`] = true;
           setWinnerRunner({ ...newChangedPrices });
           setTimeout(() => {
@@ -260,6 +270,7 @@ const DiamondCasino = () => {
     });
   }, [oddsData, timer]);
 
+ 
   /* Total win and set red border color */
   useEffect(() => {
     const placedBetBorder = {};
@@ -276,6 +287,7 @@ const DiamondCasino = () => {
       oddsData?.forEach((games) => {
         games?.runners?.forEach((runner) => {
           if (runner?.status === "WINNER") {
+           
             localStorage.setItem("showLastWinner", "true");
             setPlaceBetBorder({});
             const winnerFilter = totalPlaceOrder?.filter(
@@ -318,6 +330,7 @@ const DiamondCasino = () => {
   /* hide show place bet and show recent winner */
   useEffect(() => {
     if (timer === 0) {
+      localStorage.removeItem("confetti");
       setShowPlaceBet(false);
       setShowRecentWinner(true);
     }
@@ -386,10 +399,10 @@ const DiamondCasino = () => {
           sessionStorage.setItem("tokenExpire", 1);
         }
       };
-      const intervalId = setInterval( setTimer, 1000);
+      const intervalId = setInterval(setTimer, 1000);
       return () => clearInterval(intervalId);
     }
-  }, [token,setTokenExpireMessage]);
+  }, [token, setTokenExpireMessage]);
 
   // console.log(oddsData);
 
@@ -476,7 +489,7 @@ const DiamondCasino = () => {
                       </div>
                     </div>
                   )}
-                    {eventId == "10017" && oddsData?.length > 0 ? (
+                  {eventId == "10017" && oddsData?.length > 0 ? (
                     <TeenPatti2020
                       WinnerRunner={WinnerRunner}
                       clickedRunners={clickedRunners}

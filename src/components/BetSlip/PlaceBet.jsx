@@ -16,7 +16,7 @@ const PlaceBet = ({
   timer,
   data,
   setShowPlaceBet,
-  setShowRecentWinner
+  setShowRecentWinner,
 }) => {
   const { token } = useContextState();
   const [disabledButton, setDisabledButton] = useState(true);
@@ -27,13 +27,14 @@ const PlaceBet = ({
   // console.log(data);
   const handleOrderBets = () => {
     const placedBet = localStorage.getItem("totalBetPlace");
-    if (placedBet && placedBet !== 'undefined') {
+    if (placedBet && placedBet !== "undefined") {
       const parsedPlacedBet = JSON.parse(placedBet);
       const isExistPlaceBet = parsedPlacedBet.find((bet) =>
         marketId.some(
           (substring) =>
             bet?.marketId?.includes(substring) &&
-            bet?.marketId?.includes(placeBetValue?.marketId) && placeBetValue?.selectionId !== bet?.id
+            bet?.marketId?.includes(placeBetValue?.marketId) &&
+            placeBetValue?.selectionId !== bet?.id
         )
       );
 
@@ -70,14 +71,15 @@ const PlaceBet = ({
       .then((data) => {
         console.log(data);
         if (data?.success) {
-          sessionStorage.removeItem('tokenExpire')
+         
+          sessionStorage.removeItem("tokenExpire");
           localStorage.removeItem("totalWin");
-          localStorage.removeItem('showLastWinner')
-          setShowRecentWinner(true)
-          setShowPlaceBet(false)
+          localStorage.removeItem("showLastWinner");
+          setShowRecentWinner(true);
+          setShowPlaceBet(false);
           const totalBetPlace = localStorage.getItem("totalBetPlace");
           let existingData = [];
-          if (totalBetPlace && totalBetPlace !== 'undefined') {
+          if (totalBetPlace && totalBetPlace !== "undefined") {
             existingData = JSON.parse(totalBetPlace);
           }
           const newBetPlace = {
@@ -86,7 +88,7 @@ const PlaceBet = ({
             totalSize,
             eventId: placeBetValue?.eventId,
             marketId: placeBetValue?.marketId,
-            name:placeBetValue?.name
+            name: placeBetValue?.name,
           };
           existingData.push(newBetPlace);
           const updatedDataString = JSON.stringify(existingData);
@@ -96,7 +98,7 @@ const PlaceBet = ({
           localStorage.setItem("balance", newBalance);
           setPlaceBetValue({});
           setDisabledButton(false);
-         
+
           toast.success("Bet has been placed !");
           setClickedRunners([]);
         } else {
