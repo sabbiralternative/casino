@@ -14,6 +14,7 @@ const Main = () => {
   const { oddsData, token,setOddsData,tokenExpireMessage } = useContextState();
   const [storedBalance, setStoredBalance] = useState(null);
 
+
   useEffect(() => {
    
     const deviceWidth = (window.innerWidth * 0.04266674418).toFixed(4);

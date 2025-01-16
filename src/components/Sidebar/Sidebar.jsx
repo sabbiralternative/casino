@@ -37,9 +37,8 @@ const Sidebar = ({ sidebar, setSidebar }) => {
     }
   };
 
-
   const handleClick = () => {
-   setRules([])
+    setRules([]);
   };
 
   useEffect(() => {
