@@ -220,13 +220,15 @@ const DiamondCasino = () => {
   const roundIdForTimer = oddsData[0]?.roundId;
 
   useEffect(() => {
-    const roundStart = oddsData[0]?.roundStart;
+    // const roundStart = oddsData[0]?.roundStart;
     const counter = oddsData[0]?.timer;
-    console.log(counter);
-    const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-    const timers = counter - (currentTimestamp - roundStart);
+    // console.log(counter);
 
-    setTimer(timers);
+    // const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+    // const timers = counter - (currentTimestamp - roundStart);
+
+    // setTimer(timers);
+    setTimer(counter);
 
     if (timer > 0) {
       const interval = setInterval(() => {
