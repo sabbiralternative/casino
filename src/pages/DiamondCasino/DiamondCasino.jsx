@@ -35,6 +35,7 @@ const DiamondCasino = () => {
     tokenExpireMessage,
     setTokenExpireMessage,
   } = useContextState();
+
   const storedTotalWin = localStorage.getItem("totalWin");
   const [totalPlaceOrder, setTotalPlaceOrder] = useState([]);
   const { videoUrl } = useGetVideo();
@@ -217,9 +218,11 @@ const DiamondCasino = () => {
   /* Timer start */
   const [timer, setTimer] = useState("");
   const roundIdForTimer = oddsData[0]?.roundId;
+
   useEffect(() => {
     const roundStart = oddsData[0]?.roundStart;
-    const counter = oddsData[0]?.counter;
+    const counter = oddsData[0]?.timer;
+    console.log(counter);
     const currentTimestamp = Math.floor(new Date().getTime() / 1000);
     const timers = counter - (currentTimestamp - roundStart);
 
@@ -232,7 +235,7 @@ const DiamondCasino = () => {
       return () => clearInterval(interval);
     }
   }, [roundIdForTimer, timer]);
-  // console.log(timer);
+
   /* Timer end */
 
   /* Remove border color */
@@ -270,7 +273,6 @@ const DiamondCasino = () => {
     });
   }, [oddsData, timer]);
 
- 
   /* Total win and set red border color */
   useEffect(() => {
     const placedBetBorder = {};
@@ -287,7 +289,6 @@ const DiamondCasino = () => {
       oddsData?.forEach((games) => {
         games?.runners?.forEach((runner) => {
           if (runner?.status === "WINNER") {
-           
             localStorage.setItem("showLastWinner", "true");
             setPlaceBetBorder({});
             const winnerFilter = totalPlaceOrder?.filter(
@@ -403,8 +404,6 @@ const DiamondCasino = () => {
       return () => clearInterval(intervalId);
     }
   }, [token, setTokenExpireMessage]);
-
-  // console.log(oddsData);
 
   if (loading) {
     return <Loader />;
